@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-##### This function will check if a generated breakpoint lies within an exon
+##### This script will check if a generated breakpoint lies within an exon
 
 ##### Inputs :  1) input gff3
 #		2) chromosome name
