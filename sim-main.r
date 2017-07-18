@@ -3,7 +3,6 @@
 #### Load libraries
 library(Biostrings)
 args = commandArgs(trailingOnly=TRUE)
-#print(length(args))
 
 #### Initialize parameters
 copyNum <- 3
