@@ -31,5 +31,20 @@ Developments for simulating transposable element activity in genome evolution.
 #### filtgff3.bash
 * Takes in a .gff3 file and outputs a tab-delimited file with 3 columns: chromosome name, exon start loc, exon end loc
 
+#### map_L1_consensus_sequences_hg38.R
+* Map an arbitrary set of L1 consensus sequences against hg38. 
+
 #### trpd.dat
 * Contains tab-delimited values approximating the distribution of truncations as shown in Lee et al. 2012 Fig 3 (A)
+
+#### ./data/GenBank_L19092.fa 
+* consensus sequence retrieved from GenBank, https://www.ncbi.nlm.nih.gov/nuccore/L19092.1?report=GenBank
+
+#### ./data/Brouha_consensus_L1.fa 
+* Single L1 consensus sequence taken from Brouha, et. al. paper. 
+
+#### ./data/gb_AC002980.fa 
+* Set of 5 L1 consensus sequences retrieved from NCBI BLAST search against hg38 for Accession No. AC002980. (07/17/2017). This was the top hit noted in Table 4 of the Brouha paper. 
+
+#### ./data/hsflil1_8438.bed
+* BED file retrieved from L1Base, http://l1base.charite.de/BED/hsflil1_8438.bed
