@@ -5,14 +5,11 @@ args = commandArgs(trailingOnly=TRUE)
 library(Biostrings)
 library(BSgenome.Hsapiens.UCSC.hg38)
 
-cat("\nGenerating insertion map...\n")
-
 #### Initialize parameters
-ENifrc <- as.numeric(args[1])
-chrnm <- args[2]
+chrnm <- args[1]
 cat("\nChromosome: ",chrnm,"\n")
-cat("ENi insertion fraction: ",ENifrc,"\n")
 
+ptm <- proc.time()
 #### Read reference genome
 cat("\nReading reference genome (GRCh38)...\n")
 genome<-Hsapiens
@@ -40,25 +37,16 @@ remove(tmp)
 
 #### Calculate distribution of target categories
 cat("\nCalculating target category distribution...\n")
-ttight <- targets[primrnks>=0.5]
-tloose <- targets[primrnks<0.5]
-lenl <- length(tloose)
-lenti <- length(ttight)
-lenta <- length(targets)
-ccl <-sum(vcountPattern("TTTT",tloose,max.mismatch=0))
-cct <-sum(vcountPattern("TTTT",ttight,max.mismatch=0))
-col <- lenl-ccl
-cot <- lenti-cct
-pd <- c(11.55*cct,7.25*ccl,1.95*cot,1*col)
-pd <- (pd/sum(pd))*(1-ENifrc)
 
-#### Store indices of sites of each category
+# Store indices of sites of each category
 ict<-which(targets==tar & primrnks >= 0.5)
 icl<-which(targets==tar & primrnks < 0.5)
 iot<-which(targets!=tar & primrnks >= 0.5)
 iol<-which(targets!=tar & primrnks < 0.5)
 
-remove(genome,chr,tar,mtchView,targets,primrngs,primrnks,ttight,tloose,lenl,lenti,lenta,ccl,cct,col,cot)
+remove(genome,tar,mtchView,targets,primrngs,primrnks,prmrs,chrnm)
 
-cat("\nSaving map file...")
+cat("\nSaving map file...\n")
 save.image("gmap.rda")
+cat("\nRunning time:\n")
+proc.time() - ptm
