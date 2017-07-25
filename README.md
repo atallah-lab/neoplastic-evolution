@@ -12,7 +12,7 @@ Developments for simulating transposable element activity in genome evolution.
 * Maps potential insertion sites based on Snap-Velcro model, and generates an insertion probability distribution with respect to the site categories (closed-tight, closed-loose, open-tight, open-loose)
 * Dependencies: R(>= 2.8.0, Packages - Biostrings, BSgenome (for default hg38))
 ```
-./mapchrom.r <fraction of endonuclease-independent (ENi) insertions> <chromosome name (e.g. chrX)>
+./mapchrom.r <chromosome name (e.g. chrX)>
 ```
 #### mapgen.r
 * Maps potential insertion sites in the entire genome
