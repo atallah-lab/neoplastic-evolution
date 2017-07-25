@@ -8,12 +8,15 @@ Developments for simulating transposable element activity in genome evolution.
 * *Monot et al., 2013, The Specificity and Flexibility of L1 Reverse Transcription Priming at Imperfect T-Tracts*
 * *Lee et al., 2012, Landscape of Somatic Retrotransposition in Human Cancers*
 
-#### genmap.r
+#### mapchrom.r
 * Maps potential insertion sites based on Snap-Velcro model, and generates an insertion probability distribution with respect to the site categories (closed-tight, closed-loose, open-tight, open-loose)
 * Dependencies: R(>= 2.8.0, Packages - Biostrings, BSgenome (for default hg38))
 ```
-./genmap.r <fraction of endonuclease-independent (ENi) insertions> <chromosome name (e.g. chrX)>
+./mapchrom.r <fraction of endonuclease-independent (ENi) insertions> <chromosome name (e.g. chrX)>
 ```
+#### mapgen.r
+* Maps potential insertion sites in the entire genome
+* In development
 
 #### exchk.r
 * Example of function for checking whether a given breakpoint lies inside an exon
