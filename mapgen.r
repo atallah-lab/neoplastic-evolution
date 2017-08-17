@@ -7,9 +7,11 @@ library(BSgenome.Hsapiens.UCSC.hg38)
 cat("\nReading reference genome (GRCh38)...\n")
 genome<-Hsapiens
 
-for (chrnm in names(genome)[1:24]) {
+rmlist<-c("args","rmlist","chrnm","genome","tar","mtchView","targets","primrngs","primrnks","prmrs","insites")
+
+for (chrnm in names(genome)[11:24]) {
+	start.time<-Sys.time()
 	cat("\nChromosome: ",chrnm,"\n")
-	
 	#### Create EN target site annotation
 	cat("Creating EN target site annotation...\n")
 	# Define target sequence
@@ -18,7 +20,6 @@ for (chrnm in names(genome)[1:24]) {
 	mtchView <- matchPattern(tar,genome[[chrnm]],max.mismatch=1)
 	# Get start points of all targets
 	insites <- start(mtchView)
-
 	#### Calculate position weighted T-density scores
 	cat("Calculating position weighted T-density scores...\n")
 	# Create a list of start and end points of the 6 bp upstream of each target
@@ -39,7 +40,9 @@ for (chrnm in names(genome)[1:24]) {
 	assign(paste0("iol",chrnm),which(targets!=tar & primrnks < 0.5))
 
 	assign(paste0("insites",chrnm),start(mtchView))
-	rmlist<-("genome","tar","mtchView","targets","primrngs","primrnks","prmrs","insites")
 	cat("Saving map file...\n")
-	save(list=ls(1)[ls(1)!=rmlist],file=paste("./data/",chrnm,"map.rda",sep=""))
+	save(list=ls(1)[which(!ls(1) %in% rmlist)],file=paste("../Data/",chrnm,"map.rda",sep=""))
+	rm(list=c(paste0("ict",chrnm),paste0("icl",chrnm),paste0("iol",chrnm),paste0("iot",chrnm),paste0("insites",chrnm)))
+	end.time <- Sys.time()
+        print(end.time-start.time)
 }

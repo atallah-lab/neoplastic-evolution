@@ -10,11 +10,12 @@ genome <- Hsapiens
 cat("\nCopy number: ",copyNum,"\n")
 cat("ENi insertion fraction: ",ENifrc,"\n")
 
+#### Randomly sample chromosomes
 chrmlist<-sample(x=names(genome)[1:24],copyNum,replace=TRUE)
 chrmlist<-table(chrmlist)
 cat("\nChromosomes: ",names(chrmlist))
 
-#### Load map file
+#### Load map file for chosen chromosomes
 load_map <- function(chrmnm) {
 	mapnm<-paste(chrmnm,"gmap.rda",sep="")
 	if (!file.exists(mapnm)) {
@@ -41,27 +42,18 @@ for (chrnm in names(chrmlist)) {
 	cat("\nGenerating insertion sites...\n")
 	classes <- sample(x = c(1:5),chcopyNum,replace=TRUE,prob=pd)
 	sites = rep(0,chcopyNum)
-#	cct<-0
-#	ccl<-0
-#	cot<-0
-#	col<-0
-#	cr <-0
+
 	for (i in 1:chcopyNum) {
 		if (classes[i]==1) {
 			sites[i] <- insites[ict[runif(1,1,length(ict))]]
-#			cct<-cct+1
 		} else if (classes[i]==2) {
 			sites[i] <- insites[icl[runif(1,1,length(icl))]]
-#			ccl<-ccl+1
 		} else if (classes[i]==3) {
 			sites[i] <- insites[iot[runif(1,1,length(iot))]]
-#			cot<-cot+1
 		} else if (classes[i]==4) {
 			sites[i] <- insites[iol[runif(1,1,length(iol))]]
-#			col<-col+1
 		} else if (classes[i]==5) {
 			sites[i]<-runif(1,1,length(genome$chrnm))
-#			cr<-cr+1
 	}
 
 	cat("\nInsertion sites:\n")

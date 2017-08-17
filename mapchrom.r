@@ -43,9 +43,9 @@ assign(paste0("iot",chrnm),which(targets!=tar & primrnks >= 0.5))
 assign(paste0("iol",chrnm),which(targets!=tar & primrnks < 0.5))
 
 assign(paste0("insites",chrnm),start(mtchView))
-rmlist<-c("genome","tar","mtchView","targets","primrngs","primrnks","prmrs","insites")
+rmlist<-c("args","rmlist","chrnm","genome","tar","mtchView","targets","primrngs","primrnks","prmrs","insites")
 cat("Saving map file...\n")
-save(list=ls(1)[ls(1)!=rmlist],file=paste("./data/",chrnm,"map.rda",sep=""))
+save(list=ls(1)[which(!ls(1) %in% rmlist)],file=paste("./data/",chrnm,"map.rda",sep=""))
 cat("\nRun time:\n")
 proc.time() - ptm
 
