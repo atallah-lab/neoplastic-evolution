@@ -18,6 +18,13 @@ Developments for simulating transposable element activity in genome evolution.
 * Maps potential insertion sites in the entire genome
 * In development
 
+#### mapchrom_parallel.r
+* Experiment in parallelization applied to mapchrom.r 
+* Dependencies: R(>= 2.8.0, Packages - Biostrings, BSgenome (for default hg38), parallel, foreach, doParallel)
+```
+./mapchrom_parallel.r <chromosome stop number (e.g. 1-24)>
+```
+
 #### exchk.r
 * Example of function for checking whether a given breakpoint lies inside an exon
 * Dependencies: R(>= 3.0.0, Packages - data.table), filtgff3.bash
@@ -51,3 +58,16 @@ Developments for simulating transposable element activity in genome evolution.
 
 #### ./data/hsflil1_8438.bed
 * BED file retrieved from L1Base, http://l1base.charite.de/BED/hsflil1_8438.bed
+
+#### ./data/L1PA
+* directory to hold L1PA annotation output.
+
+#### ./data/L1PA/by_chr
+* all L1PA annotation output, by chromosome.
+
+#### ./data/L1PA/L1PA.fa
+* L1PA2, L1PA3, L1PA4 sequences.
+
+#### ./data/L1PA/L1PA2.bed, L1PA3.bed, L1PA4.bed
+* L1PA2|3|4 annotation output, by sequence, over entire genome.
+
