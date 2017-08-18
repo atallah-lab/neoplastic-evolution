@@ -3,9 +3,10 @@
 library(Biostrings)
 library(BSgenome.Hsapiens.UCSC.hg38)
 library(GenomicRanges)
+args<-commandArgs(trailingOnly=TRUE)
 
 #### Initialize parameters
-copyNum <- 3 # Number of genome-wide insertions to simulate
+copyNum <- args[1] # Number of genome-wide insertions to simulate
 ENifrc <- 0.1 # Fraction of Endonuclease-independent insertions
 genome <- Hsapiens # Genome data structure
 cat("\nCopy number: ",copyNum,"\n")
