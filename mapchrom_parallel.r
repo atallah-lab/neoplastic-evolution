@@ -26,6 +26,16 @@ library(doParallel)
 
 args = commandArgs(trailingOnly=TRUE)
 
+if (length(args) < 2) {
+	message("Usage: ./mapchrom_parallel.r <starting chromosome> <ending chromosome>")
+	stop("Please provide start and stop integers as command line args.")
+}
+
+if (as.numeric(args[1]) < 1 | as.numeric(args[2]) > 23) {
+	message("Usage: ./mapchrom_parallel.r <starting chromosome> <ending chromosome>")
+	stop("chromosome input number out of range")
+}
+
 #### Read reference genome
 cat("Reading reference genome (GRCh38)...\n")
 
@@ -36,39 +46,15 @@ registerDoParallel(cl)
 
 ### GLOBAL VARS
 target <- DNAString("TTTT")
-stop <- as.numeric(args[1])
 
-chromosomes <- c('chr1', 
-		'chr2', 
-		'chr3', 
-		'chr4', 
-		'chr5', 
-		'chr6', 
-		'chr7', 
-		'chr8',
-		'chr9',  
-		'chr10', 
-		'chr11', 
-		'chr12', 
-		'chr13',
-		'chr14',  
-		'chr15', 
-		'chr16',
-		'chr17', 
-		'chr18', 
-		'chr19', 
-		'chr20',
-		'chr21',  
-		'chr22', 
-		'chrX',
-		'chrY'
-				)
+start <- as.numeric(args[1])
+stop  <- as.numeric(args[2])
 
 mtchViews <- list() # FIXME
 primrnks <- list() # FIXME
 
 #loop in parallel
-foreach(i=1:(length(chromosomes)-stop), 
+foreach(i=start:(stop), 
 		.export = c("unmasked", "matchPattern"),
 		.packages = c("BSgenome", "Biostrings")) %dopar% {
 		 mtchViews[[i]]  <- matchPattern(target, unmasked(Hsapiens[[i]]), max.mismatch=1)
@@ -81,6 +67,5 @@ foreach(i=1:(length(chromosomes)-stop),
 	#primrnks[[i]] <- parLapply(tmp,function(x) sum(1/(x+4))/0.84563492) # corresponds to a TTTTTT primer
 	#remove(tmp)
 }
-
 stopCluster(cl)
 
