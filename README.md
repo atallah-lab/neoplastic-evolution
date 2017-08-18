@@ -2,6 +2,7 @@
 Developments for simulating transposable element activity in genome evolution.
 
 #### gen-sim.r
+* In development
 * Main function for simulating retrotransposition of L1 elements in hg38
 * Insertion site probabilities based on Snap-Velcro model (Monot et al., 2013)
 * Truncation modeled after Lee et al. (2012)
