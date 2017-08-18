@@ -2,34 +2,41 @@
 #### Load libraries
 library(Biostrings)
 library(BSgenome.Hsapiens.UCSC.hg38)
+library(GenomicRanges)
+args<-commandArgs(trailingOnly=TRUE)
 
 #### Initialize parameters
-copyNum <- 20
-ENifrc <- 0.1
-genome <- Hsapiens
+copyNum <- args[1] # Number of genome-wide insertions to simulate
+ENifrc <- 0.1 # Fraction of Endonuclease-independent insertions
+genome <- Hsapiens # Genome data structure
 cat("\nCopy number: ",copyNum,"\n")
 cat("ENi insertion fraction: ",ENifrc,"\n")
 
-#### Randomly sample chromosomes
-chrmlist<-sample(x=names(genome)[1:24],copyNum,replace=TRUE)
+sites_loci<-c() # Empty arrays for insertion site chromosomes and loci
+sites_chrm<-c()
+
+#### Sample chromosomes based on probability ranking
+load("../Data/chrmpd.rda")
+chrmlist<-sample(x=names(genome)[1:24],copyNum,replace=TRUE,prob=chrmcnt[,1]) # Here, simpyl the number of TTTT patterns provides the ranking 
 chrmlist<-table(chrmlist)
-cat("\nChromosomes: ",names(chrmlist))
+cat("\nChromosomes: ",names(chrmlist),"\n")
 
 #### Load map file for chosen chromosomes
-load_map <- function(chrmnm) {
-	mapnm<-paste(chrmnm,"gmap.rda",sep="")
-	if (!file.exists(mapnm)) {
-		stop("Map file does not exist")
-	} else {
-		cat("\nLoading map file...\n")
-		load(mapnm)
-	}
-	remove(chrnm,ptm)
+for (i in names(chrmlist)) {
+	cat("\nLoading map file...")
+	load(paste0("../Data/",i,"map.rda"))
 }
-lapply(names(chrmlist),load_map)
+cat("\n")
 
-ptm <- proc.time()
-for (chrnm in names(chrmlist)) {
+ptm <- proc.time() # Begin timer
+
+for (chrnm in names(chrmlist)) { # Loop through chromosomes in chrmlist
+	
+	ict<-get(paste0(chrnm,"ict")) # Assign temporary variables to 
+	icl<-get(paste0(chrnm,"icl"))
+	iot<-get(paste0(chrnm,"iot"))
+	iol<-get(paste0(chrnm,"iol"))
+	insites<-get(paste0(chrnm,"insites"))
 
 	chcopyNum<-chrmlist[[chrnm]]
 
@@ -53,7 +60,8 @@ for (chrnm in names(chrmlist)) {
 		} else if (classes[i]==4) {
 			sites[i] <- insites[iol[runif(1,1,length(iol))]]
 		} else if (classes[i]==5) {
-			sites[i]<-runif(1,1,length(genome$chrnm))
+			sites[i]<-runif(1,1,length(genome[[chrnm]]))
+		}
 	}
 
 	cat("\nInsertion sites:\n")
@@ -62,22 +70,29 @@ for (chrnm in names(chrmlist)) {
 	#for (i in 1:copyNum) {
 	#	print(chr[(sites[i]-3):sites[i]])
 	#}
-	gsites<-append(gsites,sites)
+	append(sites_loci,sites)
+	append(sites_chrm,chrnm)
 }
 
+rm(ict,icl,iot,iol,insites)
+
 #### Create sequences for insertion
-l1s <- readDNAStringSet("../hgL1.fa")
-l1s <- l1s[floor(runif(copyNum,1,length(l1s)))]
-trpd <- read.table("../L1trunc.dat",sep=",")
-trfrcv = sample(x = trpd[[1]], copyNum, replace = TRUE, prob = trpd[[2]])
-cat("\nTruncated fractions: ",1-trfrcv,"\n")
+load("../Data/L1RankTable.rda")
+L1RankTable$score[1:40] <- L1RankTable$score[1:40]/sum(L1RankTable$score[1:40])
+l1indcs <- sample(x=c(1:40),copyNum,replace=TRUE,prob=L1RankTable$score[1:40])
+trpd <- read.table("../Data/L1trunc.dat",sep=",")
+tdpd <- read.table("../Data/Transduction_PD.dat",sep="\t")
+trfrcv <- sample(x = trpd[[1]], copyNum, replace = TRUE, prob = trpd[[2]])
+tdlenv <- sample(x = tdpd[[2]], copyNum, replace = TRUE, prob = tdpd[[2]])
+trlenv<-rep(0,copyNum)
 for (i in 1:copyNum) {
-	len <- length(l1s[[i]])
-	trlen <- round(len*trfrcv[i])
-	l1s[[i]] <- l1s[[i]][len-trlen:len]
+	len <- L1RankTable[[3]][l1indcs[i]]-L1RankTable[[2]][l1indcs[i]]
+	trlenv[i] <- round(len*trfrcv[i])
 }
+gr <- GRanges(L1RankTable[[1]][l1indcs],IRanges(L1RankTable[[2]][l1indcs]+trlenv,L1RankTable[[3]][l1indcs]+tdlenv),strand=L1RankTable[[5]][l1indcs])
+l1s <- getSeq(genome,gr)
 cat("\nRunning time:\n")
 proc.time() - ptm
 cat("\nSaving image...\n")
-save(l1s,gsites,chrmlist,"sim-out.rda")
+save(tdlenv,trlenv,l1s,l1indcs,sites_loci,sites_chrm,file="../Data/gen-sim-out.rda")
 

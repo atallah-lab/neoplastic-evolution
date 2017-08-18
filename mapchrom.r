@@ -9,7 +9,7 @@ library(BSgenome.Hsapiens.UCSC.hg38)
 chrnm <- args[1]
 cat("\nChromosome: ",chrnm,"\n")
 
-ptm <- proc.time()
+start.time<-Sys.time()
 #### Read reference genome
 cat("Reading reference genome (GRCh38)...\n")
 genome<-Hsapiens
@@ -20,13 +20,11 @@ cat("Creating EN target site annotation...\n")
 tar <- DNAString("TTTT")
 # Find locations of target in chromosome, one mismatch is allowed
 mtchView <- matchPattern(tar,genome[[chrnm]],max.mismatch=1)
-# Get start points of all targets
-insites <- start(mtchView)
 
 #### Calculate position weighted T-density scores
 cat("Calculating position weighted T-density scores...\n")
 # Create a list of start and end points of the 6 bp upstream of each target
-primrngs <- IRanges(start=insites-9,width=6)
+primrngs <- IRanges(start=start(mtchView)-9,width=6)
 targets <- DNAStringSet(genome[[chrnm]],start(mtchView),end(mtchView))
 prmrs <- DNAStringSet(genome[[chrnm]],start(primrngs),end(primrngs))
 tmp <- vmatchPattern("T",prmrs)
@@ -37,15 +35,16 @@ remove(tmp)
 #### Calculate distribution of target categories
 cat("Calculating target category distribution...\n")
 # Store indices of sites of each category
-assign(paste0("ict",chrnm),which(targets==tar & primrnks >= 0.5))
-assign(paste0("icl",chrnm),which(targets==tar & primrnks < 0.5))
-assign(paste0("iot",chrnm),which(targets!=tar & primrnks >= 0.5))
-assign(paste0("iol",chrnm),which(targets!=tar & primrnks < 0.5))
+assign(paste0(chrnm,"ict"),which(targets==tar & primrnks >= 0.5))
+assign(paste0(chrnm,"icl"),which(targets==tar & primrnks < 0.5))
+assign(paste0(chrnm,"iot"),which(targets!=tar & primrnks >= 0.5))
+assign(paste0(chrnm,"iol"),which(targets!=tar & primrnks < 0.5))
+assign(paste0(chrnm,"insites"),start(mtchView))
 
-assign(paste0("insites",chrnm),start(mtchView))
-rmlist<-c("args","rmlist","chrnm","genome","tar","mtchView","targets","primrngs","primrnks","prmrs","insites")
+rmlist<-c("args","rmlist","chrnm","genome","tar","mtchView","targets","primrngs","primrnks","prmrs")
 cat("Saving map file...\n")
-save(list=ls(1)[which(!ls(1) %in% rmlist)],file=paste("./data/",chrnm,"map.rda",sep=""))
+save(list=ls(1)[which(!ls(1) %in% rmlist)],file=paste("../Data/",chrnm,"map.rda",sep=""))
 cat("\nRun time:\n")
-proc.time() - ptm
+end.time<-Sys.time()
+print(end.time-start.time)
 
