@@ -36,7 +36,8 @@ registerDoParallel(cl)
 
 ### GLOBAL VARS
 target <- DNAString("TTTT")
-stop <- 22
+stop <- as.numeric(args[1])
+
 chromosomes <- c('chr1', 
 		'chr2', 
 		'chr3', 
@@ -71,14 +72,14 @@ foreach(i=1:(length(chromosomes)-stop),
 		.export = c("unmasked", "matchPattern"),
 		.packages = c("BSgenome", "Biostrings")) %dopar% {
 		 mtchViews[[i]]  <- matchPattern(target, unmasked(Hsapiens[[i]]), max.mismatch=1)
-		 primrngs        <- IRanges(start=start(mtchViews[[i]])-9, width=6) # primer range
-		 targets         <- DNAStringSet(unmasked(Hsapiens[[i]]),start(mtchViews[[i]]),end(mtchViews[[i]]))
-		 prmrs           <- DNAStringSet(unmasked(Hsapiens[[i]]),start(primrngs),end(primrngs))
-		 tmp             <- vmatchPattern("T",prmrs)
-		 tmp             <- startIndex(tmp)
+		 #primrngs        <- IRanges(start=start(mtchViews[[i]])-9, width=6) # primer range
+		 #targets         <- DNAStringSet(unmasked(Hsapiens[[i]]),start(mtchViews[[i]]),end(mtchViews[[i]]))
+		 #prmrs           <- DNAStringSet(unmasked(Hsapiens[[i]]),start(primrngs),end(primrngs))
+		 #tmp             <- vmatchPattern("T",prmrs)
+		 #tmp             <- startIndex(tmp)
 
-	primrnks[[i]] <- parLapply(tmp,function(x) sum(1/(x+4))/0.84563492) # corresponds to a TTTTTT primer
-	remove(tmp)
+	#primrnks[[i]] <- parLapply(tmp,function(x) sum(1/(x+4))/0.84563492) # corresponds to a TTTTTT primer
+	#remove(tmp)
 }
 
 stopCluster(cl)
