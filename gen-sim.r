@@ -5,35 +5,37 @@ library(BSgenome.Hsapiens.UCSC.hg38)
 library(GenomicRanges)
 
 #### Initialize parameters
-copyNum <- 3
-ENifrc <- 0.1
-genome <- Hsapiens
+copyNum <- 3 # Number of genome-wide insertions to simulate
+ENifrc <- 0.1 # Fraction of Endonuclease-independent insertions
+genome <- Hsapiens # Genome data structure
 cat("\nCopy number: ",copyNum,"\n")
 cat("ENi insertion fraction: ",ENifrc,"\n")
 
-sites_loci<-c()
+sites_loci<-c() # Empty arrays for insertion site chromosomes and loci
 sites_chrm<-c()
 
-#### Sample chromosomes
+#### Sample chromosomes based on probability ranking
 load("../Data/chrmpd.rda")
-chrmlist<-sample(x=names(genome)[1:24],copyNum,replace=TRUE,prob=chrmpd)
+chrmlist<-sample(x=names(genome)[1:24],copyNum,replace=TRUE,prob=chrmcnt[,1]) # Here, simpyl the number of TTTT patterns provides the ranking 
 chrmlist<-table(chrmlist)
-cat("\nChromosomes: ",names(chrmlist))
+cat("\nChromosomes: ",names(chrmlist),"\n")
 
 #### Load map file for chosen chromosomes
-load_map <- function(chrmnm) {
-	mapnm<-paste("../Data/",chrmnm,"map.rda",sep="")
-	if (!file.exists(mapnm)) {
-		stop("Map file does not exist")
-	} else {
-		cat("\nLoading map file...\n")
-		load(mapnm)
-	}
+for (i in names(chrmlist)) {
+	cat("\nLoading map file...")
+	load(paste0("../Data/",i,"map.rda"))
 }
-ptm <- proc.time()
-for (chrnm in names(chrmlist)) {
+cat("\n")
+
+ptm <- proc.time() # Begin timer
+
+for (chrnm in names(chrmlist)) { # Loop through chromosomes in chrmlist
 	
-	load_map(chrnm)
+	ict<-get(paste0(chrnm,"ict")) # Assign temporary variables to 
+	icl<-get(paste0(chrnm,"icl"))
+	iot<-get(paste0(chrnm,"iot"))
+	iol<-get(paste0(chrnm,"iol"))
+	insites<-get(paste0(chrnm,"insites"))
 
 	chcopyNum<-chrmlist[[chrnm]]
 
@@ -57,7 +59,7 @@ for (chrnm in names(chrmlist)) {
 		} else if (classes[i]==4) {
 			sites[i] <- insites[iol[runif(1,1,length(iol))]]
 		} else if (classes[i]==5) {
-			sites[i]<-runif(1,1,length(genome$chrnm))
+			sites[i]<-runif(1,1,length(genome[[chrnm]]))
 		}
 	}
 
@@ -70,6 +72,8 @@ for (chrnm in names(chrmlist)) {
 	append(sites_loci,sites)
 	append(sites_chrm,chrnm)
 }
+
+rm(ict,icl,iot,iol,insites)
 
 #### Create sequences for insertion
 load("../Data/L1RankTable.rda")
@@ -89,5 +93,5 @@ l1s <- getSeq(genome,gr)
 cat("\nRunning time:\n")
 proc.time() - ptm
 cat("\nSaving image...\n")
-save(c(tdlenv,trlenv,l1s,l1indcs,sites_loci,sites_chrm),"sim-out.rda")
+save(tdlenv,trlenv,l1s,l1indcs,sites_loci,sites_chrm,file="../Data/gen-sim-out.rda")
 

@@ -16,16 +16,18 @@ cat("\nENi insertion fraction: ",ENifrc,"\n")
 mapnm <- paste("../Data/",chrnm,"map.rda",sep="")
 #### Load (existing) or generate (non-existant) map file
 if (!file.exists(mapnm)) {
-	if (length(args) < 2) {
-		stop("map file does not exist, please provide ENi insertion fraction and chromosome name as arguments 1 and 2")
-	} else {
-		system(paste("./mapchrom.r",args[1],args[2]))
-	}
+	stop("Map file does not exist")
 } else {
 	cat("\nLoading map file...\n")
 	load(mapnm)
 }
 rm(.Random.seed)
+
+ict<-get(paste0(chrnm,"ict")) # Assign temporary variables
+icl<-get(paste0(chrnm,"icl"))
+iot<-get(paste0(chrnm,"iot"))
+iol<-get(paste0(chrnm,"iol"))
+insites<-get(paste0(chrnm,"insites"))
 
 ptm <- proc.time()
 pd <- c(11.55*length(ict),7.25*length(icl),1.95*length(iot),1*length(iol))
@@ -48,11 +50,10 @@ for (i in 1:copyNum) {
         } else if (classes[i]==4) {
                 sites[i] <- insites[iol[runif(1,1,length(iol))]]
         } else if (classes[i]==5) {
-		sites[i]<-runif(1,1,length(genome$chrnm))
+		sites[i]<-runif(1,1,length(genome[[chrnm]]))
 	}
 }
 
 proc.time() - ptm
-remove(iot,iol,ict,icl,insites,classes,i,args,genome,mapnm,ptm)
 cat("\nSaving image...\n")
-save.image("chrom-sim-out.rda")
+save(sites,chrnm,ENifrc,pd,file=paste("../Data/",chrnm,"-sim-out.rda",sep=""))
