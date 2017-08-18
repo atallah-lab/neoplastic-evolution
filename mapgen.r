@@ -7,9 +7,14 @@ library(BSgenome.Hsapiens.UCSC.hg38)
 cat("\nReading reference genome (GRCh38)...\n")
 genome<-Hsapiens
 
-rmlist<-c("args","rmlist","chrnm","genome","tar","mtchView","targets","primrngs","primrnks","prmrs","insites")
+rmlist<-c("args","rmlist","chrnm","genome","tar","mtchView","targets","primrngs","primrnks","prmrs")
+ict<-c()
+iot<-c()
+icl<-c()
+ict<-c()
 
-for (chrnm in names(genome)[11:24]) {
+
+for (chrnm in names(genome)[1:24]) {
 	start.time<-Sys.time()
 	cat("\nChromosome: ",chrnm,"\n")
 	#### Create EN target site annotation
@@ -34,15 +39,14 @@ for (chrnm in names(genome)[11:24]) {
 	#### Calculate distribution of target categories
 	cat("Calculating target category distribution...\n")
 	# Store indices of sites of each category
-	assign(paste0("ict",chrnm),which(targets==tar & primrnks >= 0.5))
-	assign(paste0("icl",chrnm),which(targets==tar & primrnks < 0.5))
-	assign(paste0("iot",chrnm),which(targets!=tar & primrnks >= 0.5))
-	assign(paste0("iol",chrnm),which(targets!=tar & primrnks < 0.5))
+	ict<-which(targets==tar & primrnks >= 0.5)
+	icl<-which(targets==tar & primrnks < 0.5)
+	iot<-which(targets!=tar & primrnks >= 0.5)
+	iol<-which(targets!=tar & primrnks < 0.5)
 
-	assign(paste0("insites",chrnm),start(mtchView))
+	insites<-start(mtchView)
 	cat("Saving map file...\n")
 	save(list=ls(1)[which(!ls(1) %in% rmlist)],file=paste("../Data/",chrnm,"map.rda",sep=""))
-	rm(list=c(paste0("ict",chrnm),paste0("icl",chrnm),paste0("iol",chrnm),paste0("iot",chrnm),paste0("insites",chrnm)))
 	end.time <- Sys.time()
         print(end.time-start.time)
 }
