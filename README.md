@@ -24,6 +24,12 @@ Developments for simulating transposable element activity in genome evolution.
 ```
 ./mapchrom.r <chromosome name (e.g. chrX)>
 ```
+#### mapchrom_parallel.r
+* Experiment in parallelization applied to mapchrom.r 
+* Dependencies: R(>= 2.8.0, Packages - Biostrings, BSgenome (for default hg38), parallel, foreach, doParallel)
+```
+./mapchrom_parallel.r <chromosome stop number (e.g. 1-24), 24 - *23* = 1st chromosome>
+```
 #### mapgen.r
 * Maps potential insertion sites in the entire genome. Creates an .rda file for each chromosome.
 
@@ -71,3 +77,15 @@ Developments for simulating transposable element activity in genome evolution.
 
 #### ./data/hsflil1_8438.bed
 * BED file retrieved from L1Base, http://l1base.charite.de/BED/hsflil1_8438.bed
+
+#### ./data/L1PA
+* directory to hold L1PA annotation output.
+
+#### ./data/L1PA/by_chr
+* all L1PA annotation output, by chromosome.
+
+#### ./data/L1PA/L1PA.fa
+* L1PA2, L1PA3, L1PA4 sequences.
+
+#### ./data/L1PA/L1PA2.bed, L1PA3.bed, L1PA4.bed
+* L1PA2|3|4 annotation output, by sequence, over entire genome.
