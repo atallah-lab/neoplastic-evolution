@@ -27,7 +27,7 @@ Developments for simulating transposable element activity in genome evolution.
 * Experiment in parallelization applied to mapchrom.r 
 * Dependencies: R(>= 2.8.0, Packages - Biostrings, BSgenome (for default hg38), parallel, foreach, doParallel)
 ```
-./mapchrom_parallel.r <chromosome stop number (e.g. 1-24), 24 - *23* = 1st chromosome>
+./mapchrom_parallel.r <chromosome start number (e.g. 1-23), <chromosome stop number (e.g. 2-24)>
 ```
 #### mapgen.r
 * Maps potential insertion sites in the entire genome. Creates an .rda file for each chromosome.
