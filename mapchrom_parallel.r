@@ -36,6 +36,10 @@ if (as.numeric(args[1]) < 1 | as.numeric(args[2]) > 23) {
 	stop("Chromosome input number[s] out of range. Please try again.")
 }
 
+if (as.numeric(args[1]) > as.numeric(args[2])) {
+	stop("Chromosome start number is greater than end number, please try again.")
+}
+
 cores <- detectCores() - 1 # Calculate number of cores, less one. 
 cl <- makeCluster(cores, type="FORK", outfile="./output/multicorelog.txt") # Initiate cluster
 
@@ -51,7 +55,7 @@ start <- as.numeric(args[1])
 stop  <- as.numeric(args[2])
 
 mtchViews <- list() # FIXME
-primrnks <- list() # FIXME
+primrnks  <- list() # FIXME
 
 #loop in parallel
 foreach(i=start:(stop),
@@ -64,7 +68,7 @@ foreach(i=start:(stop),
 	prmrs          <- DNAStringSet(unmasked(Hsapiens[[i]]),start(primrngs),end(primrngs))
 	indices        <- startIndex(vmatchPattern("T", prmrs))
 
-	# 'parLapply' fails, using lapply for now. 
+	# 'parLapply' substitutes for lapply 
 	primrnks[[i]]  <- parLapply(cl=cl, indices, function(x) sum(1/(x+4))/0.84563492) # corresponds to a TTTTTT primer
 	}
 
