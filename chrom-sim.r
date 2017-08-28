@@ -1,59 +1,112 @@
 #!/usr/bin/env Rscript
-
 #### Load libraries
 library(Biostrings)
 library(BSgenome.Hsapiens.UCSC.hg38)
-args = commandArgs(trailingOnly=TRUE)
+library(GenomicRanges)
+args<-commandArgs(trailingOnly=TRUE)
 
 #### Initialize parameters
-copyNum <- args[2]
-ENifrc <- 0.1
-chrnm <- args[1]
-genome <- Hsapiens
-cat("\nChromosome: ",chrnm,"\n")
+copyNum <- args[1] # Number of genome-wide insertions to simulate
+ENifrc <- 0.1 # Fraction of Endonuclease-independent insertions
+genome <- Hsapiens # Genome data structure
 cat("\nCopy number: ",copyNum,"\n")
-cat("\nENi insertion fraction: ",ENifrc,"\n")
-mapnm <- paste("../Data/",chrnm,"map.rda",sep="")
-#### Load (existing) or generate (non-existant) map file
-if (!file.exists(mapnm)) {
-	stop("Map file does not exist")
-} else {
-	cat("\nLoading map file...\n")
-	load(mapnm)
+cat("ENi insertion fraction: ",ENifrc,"\n")
+
+sites_loci<-c() # Empty arrays for insertion site chromosomes and loci
+sites_chrm<-c()
+sites_strand<-c()
+strdict<-c("+","-")
+names(strdict)<-c(1,2)
+
+#### Sample chromosomes based on probability ranking
+chrmlist<-args[2]
+chrmlist<-table(chrmlist)
+cat("\nChromosome: ",names(chrmlist),"\n")
+
+#### Load map file for chosen chromosomes
+for (i in names(chrmlist)) {
+	cat("\nLoading map file...")
+	load(paste0("../Data/",i,"map.rda"))
 }
-rm(.Random.seed)
+cat("\n")
 
-ict<-get(paste0(chrnm,"ict")) # Assign temporary variables
-icl<-get(paste0(chrnm,"icl"))
-iot<-get(paste0(chrnm,"iot"))
-iol<-get(paste0(chrnm,"iol"))
-insites<-get(paste0(chrnm,"insites"))
+ptm <- proc.time() # Begin timer
 
-ptm <- proc.time()
-pd <- c(11.55*length(ict),7.25*length(icl),1.95*length(iot),1*length(iol))
-pd <- (pd/sum(pd))*(1-ENifrc)
-pd <- append(pd,ENifrc)
-cat("\nSite class distribution:\n",pd,"\n")
+for (chrnm in names(chrmlist)) { # Loop through chromosomes in chrmlist
+	
+	cat("\nChromosome: ",chrnm)
 
-#### Generate insertion sites
-cat("\nGenerating insertion loci...\n\n")
-classes <- sample(x=c(1:5),copyNum,replace=TRUE,prob=pd)
-sites = rep(0,copyNum)
+	ict<-get(paste0(chrnm,"ict"))
+	icl<-get(paste0(chrnm,"icl"))
+	iot<-get(paste0(chrnm,"iot"))
+	iol<-get(paste0(chrnm,"iol"))
+	insites<-get(paste0(chrnm,"insites"))
 
-for (i in 1:copyNum) {
-	if (classes[i]==1) {
-		sites[i] <- insites[ict[runif(1,1,length(ict))]]
-	} else if (classes[i]==2) {
-		sites[i] <- insites[icl[runif(1,1,length(icl))]]
-	} else if (classes[i]==3) {
-                sites[i] <- insites[iot[runif(1,1,length(iot))]]
-        } else if (classes[i]==4) {
-                sites[i] <- insites[iol[runif(1,1,length(iol))]]
-        } else if (classes[i]==5) {
-		sites[i]<-runif(1,1,length(genome[[chrnm]]))
+	chrcopyNum<-chrmlist[[chrnm]]
+
+	pd <- c(11.55*length(which(!is.na(ict))),7.25*length(which(!is.na(icl))),1.95*length(which(!is.na(iot))),1*length(which(!is.na(iol))))
+	pd <- (pd/sum(pd))*(1-ENifrc)
+	pd <- append(pd,ENifrc)
+	cat("\nSite class distribution:\n",pd)
+
+	#### Generate insertion sites
+	classes <- sample(x = c(1:5),chrcopyNum,replace=TRUE,prob=pd)
+	sites <- rep(0,chrcopyNum)
+	strand <-rep(0,chrcopyNum)
+
+	for (i in 1:chrcopyNum) {
+		if (classes[i]==1) {
+			tmp<-sample(c(1,2),1)
+			sites[i] <- insites[ict[sample(c(1:length(which(!is.na(ict[,tmp])))),1),tmp]]
+			strand[i] <- strdict[[tmp]]
+		} else if (classes[i]==2) {
+			tmp<-sample(c(1,2),1)
+			sites[i] <- insites[icl[sample(c(1:length(which(!is.na(icl[,tmp])))),1),tmp]]
+			strand[i] <- strdict[[tmp]]
+		} else if (classes[i]==3) {
+			tmp<-sample(c(1,2),1)
+			sites[i] <- insites[iot[sample(c(1:length(which(!is.na(iot[,tmp])))),1),tmp]]
+			strand[i] <- strdict[[tmp]]
+		} else if (classes[i]==4) {
+			tmp<-sample(c(1,2),1)
+			sites[i] <- insites[iol[sample(c(1:length(which(!is.na(iol[,tmp])))),1),tmp]]
+			strand[i] <- strdict[[tmp]]
+		} else if (classes[i]==5) {
+			sites[i]<-runif(1,1,length(genome[[chrnm]]))
+			strand[i] <- strdict[[sample(c(1,2),1)]]
+		}
 	}
+
+	cat("\nInsertion sites:\n")
+	cat(sites,"\n")
+	#cat("Site targets:\n")
+	#for (i in 1:copyNum) {
+	#	print(chr[(sites[i]-3):sites[i]])
+	#}
+	append(sites_loci,sites)
+	append(sites_chrm,chrnm)
+	append(sites_strand,strand)
 }
 
+rm(ict,icl,iot,iol,insites)
+
+#### Create sequences for insertion
+load("../Data/L1RankTable.rda")
+L1RankTable$score[1:40] <- L1RankTable$score[1:40]/sum(L1RankTable$score[1:40])
+l1indcs <- sample(x=c(1:40),copyNum,replace=TRUE,prob=L1RankTable$score[1:40])
+trpd <- read.table("../Data/L1truncpd.csv",sep=",")
+tdpd <- read.table("../Data/L1transdpd.txt",sep="\t")
+trfrcv <- sample(x = trpd[[1]], copyNum, replace = TRUE, prob = trpd[[2]])
+tdlenv <- sample(x = tdpd[[2]], copyNum, replace = TRUE, prob = tdpd[[2]])
+trlenv<-rep(0,copyNum)
+for (i in 1:copyNum) {
+	len <- L1RankTable[[3]][l1indcs[i]]-L1RankTable[[2]][l1indcs[i]]
+	trlenv[i] <- round(len*trfrcv[i])
+}
+gr <- GRanges(L1RankTable[[1]][l1indcs],IRanges(L1RankTable[[2]][l1indcs]+trlenv,L1RankTable[[3]][l1indcs]+tdlenv),strand=L1RankTable[[5]][l1indcs])
+l1s <- getSeq(genome,gr)
+cat("\nRunning time:\n")
 proc.time() - ptm
 cat("\nSaving image...\n")
-save(sites,chrnm,ENifrc,pd,file=paste("../Data/",chrnm,"-sim-out.rda",sep=""))
+save(tdlenv,trlenv,l1s,l1indcs,sites_loci,sites_chrm,sites_strand,file="../Data/chrom-sim-out.rda")
+
