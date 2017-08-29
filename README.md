@@ -10,19 +10,17 @@ Developments for simulating transposable element activity in genome evolution.
 * *Monot et al., 2013, The Specificity and Flexibility of L1 Reverse Transcription Priming at Imperfect T-Tracts*
 * *Lee et al., 2012, Landscape of Somatic Retrotransposition in Human Cancers*
 * *Goodier et al., 2000, Transduction of 3′-flanking sequences is common in L1 retrotransposition*
+```
+./gen-sim.r <copy number>
+```
 
 #### chrom-sim.r
 * Generates insertion sites in a single chromosome based on Snap-Velcro model
 * Dependencies: R(>= 2.8.0, Packages - Biostrings, BSgenome (for default hg38))
 ```
-./chrom-sim.r <Chromosome Name (e.g. chr1)> <Copy Number>
+./chrom-sim.r <Copy Number> <Chromosome Name (e.g. chr1)>
 ```
-#### mapchrom.r
-* Maps potential insertion sites based on Snap-Velcro model, and generates an insertion probability distribution with respect to the site categories (closed-tight, closed-loose, open-tight, open-loose)
-* Dependencies: R(>= 2.8.0, Packages - Biostrings, BSgenome (for default hg38))
-```
-./mapchrom.r <chromosome name (e.g. chrX)>
-```
+
 #### mapchrom_parallel.r
 * Experiment in parallelization applied to mapchrom.r 
 * Dependencies: R(>= 2.8.0, Packages - Biostrings, BSgenome (for default hg38), parallel, foreach, doParallel)
@@ -30,10 +28,13 @@ Developments for simulating transposable element activity in genome evolution.
 ./mapchrom_parallel.r <chromosome start number (e.g. 1-23), <chromosome stop number (e.g. 2-24)>
 ```
 #### mapgen.r
-* Maps potential insertion sites in the entire genome. Creates an .rda file for each chromosome.
+* Maps potential insertion sites. Creates an .rda file for each chromosome in a provided range.
+```
+./mapgen.r <start chromosome (e.g. 1)> <end chromosome (e.g. Y)>
+```
 
-#### get_chrom_pd.r
-* Generates an insertion probability distribution of the chromosomes based on Snap-Velcro category distribution
+#### get_sv_dist.r
+* Stores the counts of each EN site category for each chromosome in a 24 x 4 array.
 
 #### hgextract.r
 * Extracts segments from a genome in ranges provided in a tab-delimited text file, and outputs the results to a Fasta file.
@@ -56,14 +57,11 @@ Developments for simulating transposable element activity in genome evolution.
 ```
 ./gcbasedins.r <optional: input genome (fasta, default - hg19)> <output file name (fasta)>
 ```
-#### filtgff3.bash
+#### gff3_exonfilt.bash
 * Takes in a .gff3 file and outputs a tab-delimited file with 3 columns: chromosome name, exon start loc, exon end loc
 
 #### map_L1_consensus_sequences_hg38.R
 * Map an arbitrary set of L1 consensus sequences against hg38. 
-
-#### trpd.dat
-* Contains tab-delimited values approximating the distribution of truncations as shown in Lee et al. 2012 Fig 3 (A)
 
 #### ./data/GenBank_L19092.fa 
 * consensus sequence retrieved from GenBank, https://www.ncbi.nlm.nih.gov/nuccore/L19092.1?report=GenBank
