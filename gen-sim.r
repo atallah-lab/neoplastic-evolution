@@ -15,6 +15,7 @@ cat("ENi insertion fraction: ",ENifrc,"\n")
 sites_loci<-c() # Empty arrays for insertion site chromosomes and loci
 sites_chrm<-c()
 sites_strand<-c()
+sites_classes<-c()
 strdict<-c("+","-")
 names(strdict)<-c(1,2)
 
@@ -84,9 +85,10 @@ for (chrnm in names(chrmlist)) { # Loop through chromosomes in chrmlist
 	#for (i in 1:copyNum) {
 	#	print(chr[(sites[i]-3):sites[i]])
 	#}
-	append(sites_loci,sites)
-	append(sites_chrm,chrnm)
-	append(sites_strand,strand)
+	sites_loci<-append(sites_loci,sites)
+	sites_chrm<-append(sites_chrm,rep(chrnm,chrcopyNum))
+	sites_strand<-append(sites_strand,strand)
+	sites_classes<-append(sites_classes,classes)
 }
 
 rm(ict,icl,iot,iol,insites)
@@ -98,7 +100,7 @@ l1indcs <- sample(x=c(1:40),copyNum,replace=TRUE,prob=L1RankTable$score[1:40])
 trpd <- read.table("../Data/L1truncpd.csv",sep=",")
 tdpd <- read.table("../Data/L1transdpd.txt",sep="\t")
 trfrcv <- sample(x = trpd[[1]], copyNum, replace = TRUE, prob = trpd[[2]])
-tdlenv <- sample(x = tdpd[[2]], copyNum, replace = TRUE, prob = tdpd[[2]])
+tdlenv <- sample(x = tdpd[[1]], copyNum, replace = TRUE, prob = tdpd[[2]])
 trlenv<-rep(0,copyNum)
 for (i in 1:copyNum) {
 	len <- L1RankTable[[3]][l1indcs[i]]-L1RankTable[[2]][l1indcs[i]]
@@ -109,5 +111,5 @@ l1s <- getSeq(genome,gr)
 cat("\nRunning time:\n")
 proc.time() - ptm
 cat("\nSaving image...\n")
-save(tdlenv,trlenv,l1s,l1indcs,sites_loci,sites_chrm,sites_strand,file="../Data/gen-sim-out.rda")
+save(tdlenv,trlenv,l1s,l1indcs,sites_loci,sites_chrm,sites_strand,sites_classes,file="../Data/gen-sim-out.rda")
 
