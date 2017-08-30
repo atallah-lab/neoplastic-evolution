@@ -104,7 +104,7 @@ tdlenv <- sample(x = tdpd[[1]], copyNum, replace = TRUE, prob = tdpd[[2]])
 trlenv<-rep(0,copyNum)
 for (i in 1:copyNum) {
 	len <- L1RankTable[[3]][l1indcs[i]]-L1RankTable[[2]][l1indcs[i]]
-	trlenv[i] <- round(len*trfrcv[i])
+	trlenv[i] <- ceiling(len*trfrcv[i])
 }
 gr <- GRanges(L1RankTable[[1]][l1indcs],IRanges(L1RankTable[[2]][l1indcs]+trlenv,L1RankTable[[3]][l1indcs]+tdlenv),strand=L1RankTable[[5]][l1indcs])
 l1s <- getSeq(genome,gr)
