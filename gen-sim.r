@@ -8,7 +8,7 @@
 # This script loads a file representing a series of 4x24 arrays that's generated 
 # by 'get_sv_dist.r'. It uses this to calculate a 'probability of insertion' 
 # vector for the chromosomes specified. 
- 
+# 
 # Insertion site probabilities are based on the 'Snap-Velcro model' described 
 # here:
 #
@@ -27,7 +27,6 @@
 library(Biostrings)
 library(BSgenome.Hsapiens.UCSC.hg38)
 library(GenomicRanges)
-
 
 args<-commandArgs(trailingOnly=TRUE)
  
@@ -69,7 +68,6 @@ cat("\n")
 ptm <- proc.time() # Begin timer
 
 #--- EXPLAIN: Does this code duplicate 'get_sv_dist.r' ?
-
 for (chrnm in names(chrmlist)) {
 	
 	cat("\nChromosome: ",chrnm)
@@ -126,8 +124,7 @@ for (chrnm in names(chrmlist)) {
 	sites_strand<-append(sites_strand,strand)
 	sites_classes<-append(sites_classes,classes)
 }
-
-rm(ict,icl,iot,iol,insites)
+rm(ict,icl,iot,iol,insites) # clean up
 
 #--- Creates sequences for insertion
 load("./data/L1RankTable.rda")
