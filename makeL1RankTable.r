@@ -10,8 +10,7 @@
 # Usage: ./makeL1RankTable.r <score file>, <l1base file>, <output image filename>
 # Output: <output image filename> to data directory.
 #
-# Dependencies: R(>= 2.8.0, Packages - Biostrings, BSgenome (for default hg38), 
-# GenomicRanges, data.table)
+# Dependencies: R(>= 2.8.0, Packages - Biostrings, data.table)
 # -----------------------------------------------------------------------------
 
 library(Biostrings)
