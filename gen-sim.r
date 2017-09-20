@@ -30,9 +30,11 @@ args<-commandArgs(trailingOnly=TRUE)
  
 copyNum <- args[1] # args[1] is number of genome-wide insertions.
 
-# An endonuclease encoded by L1 is normally required for retrotransposition
-# to occur though in ~10% of cases it is not. The following variable just
-# represents the allowed fraction of endonuclease-independent insertions.  
+#--- An endonuclease encoded by L1 is normally required for retrotransposition
+# to occur. However, in ~10% of cases this does not happen. The following variable 
+# just represents the allowed fraction of endonuclease-independent insertions and
+# is currently modeled as occurring in random locations. 
+# This fraction of ENi insertions is tunable, default is 0.1.  
 ENifrc <- 0.1
 
 genome <- Hsapiens # hg38 human genome. 
