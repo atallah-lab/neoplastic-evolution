@@ -48,7 +48,7 @@ for (chrnm in names(genome)[start:end]) {
 	#--- Calculates position weighted T-density scores
 	#cat("Calculating position-weighted T-density scores...\n")
     
-    #--- Start and end points of a 6 bp upstream 'T' sequence (targets)
+	#--- Start and end points of a 6 bp upstream 'T' sequence (targets)
 	primrngs <- IRanges(start=start(mtchView)-6,width=6)
 	targets <- DNAStringSet(genome[[chrnm]],start(mtchView),end(mtchView))
 	prmrs <- DNAStringSet(genome[[chrnm]],start(primrngs),end(primrngs))
