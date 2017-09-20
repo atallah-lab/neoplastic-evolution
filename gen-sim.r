@@ -10,9 +10,7 @@
 # vector for the chromosomes specified. 
 # 
 # Insertion site probabilities are based on the 'Snap-Velcro model' described 
-# here:
-#
-# Clement Monot, et al. (2013) "The Specificity and Flexibility of L1 Reverse 
+# in Clement Monot, et al. (2013) "The Specificity and Flexibility of L1 Reverse 
 # Transcription Priming at Imperfect T-Tracts." PLOS Genetics, 9:5.
 #
 # This script does two things:
