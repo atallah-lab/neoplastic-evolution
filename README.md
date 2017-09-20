@@ -2,17 +2,17 @@
 An R project developed to simulate transposable element activity in genome evolution.
 ### Background 
 ---
-##### What is the 'Snap-Velcro' Model?
+#### What is the 'Snap-Velcro' Model?
 Prior studies have demonstrated that most L1 insertions occur in sequences related to the L1 EN consensus sequence (degenerate 5′-TTTT/A- 3′ sites). The *Snap-Velcro* model describes four possible types of insertion site guided by two parameters. The *snap* parameter represents the last four nucleotides of the primer and is considered a perfect terminal match and 'closed' if it ends with four T’s. The snap is considered 'open' if it contains a mismatch in the last four T’s. The *velcro* region of the primer (6 upstream basepairs) can be classified as being either *tightly-fastened* or *loosely-fastened* based on its position-weighted T-density score. (Monot et al., 2013)
 
-##### What is a position weighted T-density score?
+#### What is a position weighted T-density score?
 The position-weighted T-density score is the sum of thymine (T) nucleotides where each 'T' is weighted in terms of the inverse proportionality of its distance from the 3’ end of the primer. The *maximum* velcro score corresponds to six consecutive T’s and is:
 
 (1/5) + (1/6) + ... + (1/10) = **0.84563492** 
 
 Each score for a velcro region is divided by this maximum score as a normalization. If the position-weighted T-density score of the velcro region is ≥0.5 then that region is considered tightly-fastened, otherwise it is loosely-fastened.
 
-##### Relevance of 'Snap-Velcro' Model
+#### Relevance of 'Snap-Velcro' Model
 Monot et al. studed the relative enrichment of L1 insertion frequencies amongst the four snap-velcro categories in humans. They recorded the number of insertions observed at each type of EN site, and divided this by the number of site-types in the reference genome (hg19 in their study). Amongst two datasets of human L1 insertions (Solyom, 2012; Lee, 2012) they found that the average relative enrichment for the closed/tight, closed/loose, open/tight, and open/loose categories is, respectively 11.55, 7.25, 1.95, 1.00. 
 
 
