@@ -20,7 +20,7 @@ Monot et al. studed the relative enrichment of L1 insertion frequencies amongst 
 
 
 ## Code
----
+
 #### gen-sim.r
 * Main function for simulating retrotransposition of L1 elements in hg38
 * Insertion site probabilities based on Snap-Velcro model (Monot et al., 2013)
