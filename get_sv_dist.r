@@ -11,6 +11,9 @@
 # closed-snap/tight-velcro sites (type with the highest enrichment) in each 
 # chromosome.
 #
+# Usage: ./get_sv_dist.r 
+# Output: file named 'chrmpd.rda' to data directory.
+#
 # Dependencies: R(>= 2.8.0, Packages - Biostrings, BSgenome (for default hg38), 
 # GenomicRanges)
 # -----------------------------------------------------------------------------
