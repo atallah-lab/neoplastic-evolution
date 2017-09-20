@@ -52,7 +52,7 @@ names(strdict)<-c(1,2)
 load("./data/chrmpd.rda")
 
 #--- Here the ranking is provided by the number of 'TTTT' patterns.
-chrmlist<-sample(x=names(genome)[1:24],copyNum,replace=TRUE,prob=chrmcnt[,1])
+chrmlist<-sample(x=names(genome)[1:1],copyNum,replace=TRUE,prob=chrmcnt[,1])
 chrmlist<-table(chrmlist)
 cat("\nChromosomes: ",names(chrmlist),"\n")
 
@@ -128,8 +128,8 @@ rm(ict,icl,iot,iol,insites) # clean up
 load("./data/L1RankTable.rda")
 L1RankTable$score[1:40] <- L1RankTable$score[1:40]/sum(L1RankTable$score[1:40])
 l1indcs <- sample(x=c(1:40),copyNum,replace=TRUE,prob=L1RankTable$score[1:40])
-trpd <- read.table("../Data/L1truncpd.csv",sep=",")
-tdpd <- read.table("../Data/L1transdpd.txt",sep="\t")
+trpd <- read.table("./data/L1truncpd.csv",sep=",")
+tdpd <- read.table("./data/L1transdpd.txt",sep="\t")
 trfrcv <- sample(x = trpd[[1]], copyNum, replace = TRUE, prob = trpd[[2]])
 tdlenv <- sample(x = tdpd[[1]], copyNum, replace = TRUE, prob = tdpd[[2]])
 trlenv<-rep(0,copyNum)
