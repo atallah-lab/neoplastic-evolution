@@ -5,9 +5,9 @@
 
 # This script extracts segments of the hg38 reference genome that are provided 
 # to it in tab-delimited form, assuming the following format for each row: 
-
-# chromosomeName	startPt	endPt
-
+#
+#		chromosomeName		startPt		endPt
+#
 # It writes the extractions to a Fasta file, with each sequence numbered.
 #
 # Usage: ./hgextract.r <...> <...>
@@ -17,7 +17,7 @@
 # GenomicRanges)
 # -----------------------------------------------------------------------------
 
-
+#--- Load libraries
 library(Biostrings)
 library(GenomicRanges)
 library(BSgenome.Hsapiens.UCSC.hg38)
@@ -25,9 +25,11 @@ library(BSgenome.Hsapiens.UCSC.hg38)
 args = commandArgs(trailingOnly=TRUE)
 
 if (length(args) <2) {
-	print("Please provide input and output file names")
+	message("Usage: ./hgextract.r <> <>")
+	stop("Please provide input and output file names.")
 } else if (length(args)>2) {
-	print("Only first two arguments used")
+	message("Usage: ./hgextract.r <> <>")
+	message("Only first two arguments used")
 }
 tmp<-read.table(args[1])
 gr <- GRanges(tmp[[1]],IRanges(tmp[[2]],tmp[[3]]))
