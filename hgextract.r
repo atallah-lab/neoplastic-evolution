@@ -6,7 +6,7 @@
 # This script extracts segments of the hg38 reference genome that are provided 
 # to it in tab-delimited form, assuming the following format for each row: 
 #
-#		chromosomeName		startPt		endPt
+#	chromosomeName		startPt		endPt
 #
 # It writes the extractions to a Fasta file, with each sequence numbered.
 #
