@@ -13,11 +13,11 @@ A T-density is calculated by dividing the number of Ts in the oligonucleotide by
 
 LOU519:
 GAGCCAGGAGGAATACTTTT
-1 + (1/2) + (1/3) + (1/4) + (1/7) = 2.23
+1 + (1/2) + (1/3) + (1/4) + (1/7) = **2.23**
 
 LOU541:
 TTTTTTTTTTTTTTTTTTTT
-1 + (1/2) + (1/3) + ... + (1/19) + (1/20) = 3.60
+1 + (1/2) + (1/3) + ... + (1/19) + (1/20) = **3.60**
 
 The position-weighted T-density is calculated by dividing the position-weighted T-count of a primer to the maximum position-weighted T-count. Thus the position-weighted T-density of LOU519 is equal to 0.62 (2.23/3.60) and the position-weighted T-density of LOU541 is equal to 1 (3.60/3.60). 
 
