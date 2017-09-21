@@ -9,8 +9,21 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 Prior studies have demonstrated that most L1 insertions occur in sequences related to the L1 EN consensus sequence (degenerate 5′-TTTT/A- 3′ sites). The *Snap-Velcro* model describes four possible types of insertion site guided by two parameters. The *snap* parameter represents the last four nucleotides of the primer and is considered a perfect terminal match and 'closed' if it ends with four T’s. The snap is considered 'open' if it contains a mismatch in the last four T’s. The *velcro* region of the primer (6 upstream basepairs) can be classified as being either *tightly-fastened* or *loosely-fastened* based on its position-weighted T-density score. (Monot et al., 2013)
 
 #### What's a position weighted T-density score?
-The position-weighted T-density score is the sum of thymine (T) nucleotides where each 'T' is weighted in terms of the inverse proportionality of its distance from the 3’ end of the primer. The *maximum* velcro score corresponds to six consecutive T’s and is:
+A T-density is calculated by dividing the number of Ts in the oligonucleotide by the length of the oligonucleotide. The position-weighted T-density gives more weight to Ts which are closer to the 3' end of the primer. The weight is inversely proportional to the distance from the 3' end.
 
+LOU519:
+GAGCCAGGAGGAATACTTTT
+1 + (1/2) + (1/3) + (1/4) + (1/7) = 2.23
+
+LOU541:
+TTTTTTTTTTTTTTTTTTTT
+1 + (1/2) + (1/3) + ... + (1/19) + (1/20) = 3.60
+
+The position-weighted T-density is calculated by dividing the position-weighted T-count of a primer to the maximum position-weighted T-count. Thus the position-weighted T-density of LOU519 is equal to 0.62 (2.23/3.60) and the position-weighted T-density of LOU541 is equal to 1 (3.60/3.60). 
+
+The *maximum* velcro score corresponds to six consecutive T’s and is:
+
+GAGCCAGCCATTTTTTTTTT
 (1/5) + (1/6) + ... + (1/10) = **0.84563492** 
 
 Each score for a velcro region is divided by this maximum score as a normalization. If the position-weighted T-density score of the velcro region is ≥0.5 then that region is considered tightly-fastened, otherwise it is loosely-fastened.
