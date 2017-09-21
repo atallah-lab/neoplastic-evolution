@@ -25,11 +25,11 @@ library(BSgenome.Hsapiens.UCSC.hg38)
 args = commandArgs(trailingOnly=TRUE)
 
 if (length(args) <2) {
-	message("Usage: ./hgextract.r <> <>")
-	stop("Please provide input and output file names.")
+message("Usage: ./hgextract.r <> <>")
+stop("Please provide input and output file names.")
 } else if (length(args)>2) {
-	message("Usage: ./hgextract.r <> <>")
-	message("Only first two arguments used")
+message("Usage: ./hgextract.r <> <>")
+message("Only first two arguments used.")
 }
 tmp<-read.table(args[1])
 gr <- GRanges(tmp[[1]],IRanges(tmp[[2]],tmp[[3]]))
