@@ -12,7 +12,7 @@
 # Output: Separate map.rda files per chromosome specified.
 #
 # Dependencies: R(>= 2.8.0, Packages - Biostrings, BSgenome (for default hg38), 
-# GenomicRanges)
+# GenomicRanges, parallel, foreach, doParallel)
 # -----------------------------------------------------------------------------
 
 library(Biostrings)
