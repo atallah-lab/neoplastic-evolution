@@ -1,5 +1,20 @@
 #!/usr/bin/env Rscript
 
+# -----------------------------------------------------------------------------
+# mapchrom_parallel.r #NAMING
+#
+# Computes target distributions for n chromosomes, in parallel. 
+#
+# Command line args:
+#   args[i:n] list of chromosomes.
+#
+# Usage: ./mapchrom_parallel.r <starting chromosome> <ending chromosome>
+# Output: Separate map.rda files per chromosome specified.
+#
+# Dependencies: R(>= 2.8.0, Packages - Biostrings, BSgenome (for default hg38), 
+# GenomicRanges)
+# -----------------------------------------------------------------------------
+
   # Computes target distributions for n chromosomes, in parallel.
   #
   # Command line args:
