@@ -49,7 +49,7 @@ cl <- makeCluster(cores, type="FORK", outfile="./output/multicorelog.txt") # Ini
 
 #message(class(cl)) #SOCKcluster
 
-# insert serial backend, otherwise error in repetetive tasks
+# insert serial backend, otherwise error in repetitive tasks
 registerDoSEQ()
 
 ### GLOBAL VARS
