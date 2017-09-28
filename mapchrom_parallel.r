@@ -15,17 +15,6 @@
 # GenomicRanges)
 # -----------------------------------------------------------------------------
 
-  # Computes target distributions for n chromosomes, in parallel.
-  #
-  # Command line args:
-  #   args[i..n] list of chromosomes.  
-  #
-  # Returns:
-  #   Separate map.rda files per chromosome.
-
-#source("https://bioconductor.org/biocLite.R")
-#require(BSgenome.Hsapiens.UCSC.hg38)
-
 library(Biostrings)
 library(BSgenome.Hsapiens.UCSC.hg38)
 
