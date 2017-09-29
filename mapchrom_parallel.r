@@ -1,15 +1,19 @@
 #!/usr/bin/env Rscript
 
-  # Computes target distributions for n chromosomes, in parallel.
-  #
-  # Command line args:
-  #   args[i..n] list of chromosomes.  
-  #
-  # Returns:
-  #   Separate map.rda files per chromosome.
-
-#source("https://bioconductor.org/biocLite.R")
-#require(BSgenome.Hsapiens.UCSC.hg38)
+# -----------------------------------------------------------------------------
+# mapchrom_parallel.r #NAMING
+#
+# Computes target distributions for n chromosomes, in parallel. 
+#
+# Command line args:
+#   args[i:n] list of chromosomes.
+#
+# Usage: ./mapchrom_parallel.r <starting chromosome> <ending chromosome>
+# Output: Separate map.rda files per chromosome specified.
+#
+# Dependencies: R(>= 2.8.0, Packages - Biostrings, BSgenome (for default hg38), 
+# GenomicRanges, parallel, foreach, doParallel)
+# -----------------------------------------------------------------------------
 
 library(Biostrings)
 library(BSgenome.Hsapiens.UCSC.hg38)
@@ -45,7 +49,7 @@ cl <- makeCluster(cores, type="FORK", outfile="./output/multicorelog.txt") # Ini
 
 #message(class(cl)) #SOCKcluster
 
-# insert serial backend, otherwise error in repetetive tasks
+# insert serial backend, otherwise error in repetitive tasks
 registerDoSEQ()
 
 ### GLOBAL VARS
