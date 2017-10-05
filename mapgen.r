@@ -7,8 +7,8 @@
 # in Clement Monot, et al. (2013) "The Specificity and Flexibility of L1 Reverse 
 # Transcription Priming at Imperfect T-Tracts." PLOS Genetics, 9:5.
 #
-# This script creates a separate R data file containing the locations of each 
-# type of EN site for both sense and anti-sense strands of each chromosome.
+# This script creates a separate R data file for each chromosome containing the 
+# locations of each type of EN site for both sense and anti-sense strands.
 # Locations and scores of the putative EN sites are initially stored in memory. 
 #
 # Usage: ./mapgen.r <start chromosome (e.g. 1)> <end chromosome (e.g. Y)>
@@ -117,7 +117,7 @@ for (chrnm in names(genome)[start:end]) {
 
 	cat("Saving map file...\n")
 	wd <- getwd()
-	save(list=c(paste0(chrnm,"ict"),paste0(chrnm,"icl"),paste0(chrnm,"iot"),paste0(chrnm,"iol"),paste0(chrnm,"insites")),file=paste(wd, "/data/",chrnm,"map.rda",sep=""))
+	save(list=c(paste0(chrnm,"ict"),paste0(chrnm,"icl"),paste0(chrnm,"iot"),paste0(chrnm,"iol"),paste0(chrnm,"insites")),file=paste(wd, "/data/root_maps/",chrnm,"map.rda",sep=""))
 	rm(list=c(paste0(chrnm,"ict"),paste0(chrnm,"icl"),paste0(chrnm,"iot"),paste0(chrnm,"iol"),paste0(chrnm,"insites")))
 	end.time <- Sys.time()
         print(end.time-start.time)

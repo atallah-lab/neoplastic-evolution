@@ -54,14 +54,14 @@ names(strdict)<-c(1,2)
 load("./data/chrmpd.rda")
 
 #--- Here the ranking is provided by the number of 'TTTT' patterns.
-chrmlist<-sample(x=names(genome)[1:1],copyNum,replace=TRUE,prob=chrmcnt[,1])
+chrmlist<-sample(x=names(genome)[1:24],copyNum,replace=TRUE,prob=chrmcnt[,1])
 chrmlist<-table(chrmlist)
 cat("\nChromosomes: ",names(chrmlist),"\n")
 
 #--- Load map file for chosen chromosomes
 for (i in names(chrmlist)) {
 	cat("\nLoading map file...")
-	load(paste0("./data/",i,"map.rda"))
+	load(paste0("./data/root_maps/",i,"map.rda"))
 }
 cat("\n")
 
