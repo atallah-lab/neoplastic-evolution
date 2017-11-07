@@ -68,7 +68,7 @@ developing the genome-level retrotransposition model.
 #### mapgen.r
 * Maps potential insertion sites. Creates an .rda file for each chromosome in a provided range.
 ```
-./mapgen.r <start chromosome (e.g. 1)> <end chromosome (e.g. Y)>
+./mapgen.r <start chromosome # (e.g. 1)> <end chromosome # (e.g. 24)>
 ```
 
 #### get_sv_dist.r
