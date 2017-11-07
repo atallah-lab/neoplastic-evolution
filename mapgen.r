@@ -11,7 +11,7 @@
 # locations of each type of EN site for both sense and anti-sense strands.
 # Locations and scores of the putative EN sites are initially stored in memory. 
 #
-# Usage: ./mapgen.r <start chromosome (e.g. 1)> <end chromosome (e.g. Y)>
+# Usage: ./mapgen.r <start chromosome # (e.g. 1)> <end chromosome # (e.g. 24)>
 # Output: <chromosome name>map.rda to data directory file specified on line 123.
 #
 # Dependencies: R(>= 2.8.0, Packages - Biostrings, BSgenome (for default hg38), 
@@ -24,8 +24,8 @@ library(BSgenome.Hsapiens.UCSC.hg38)
 
 #--- arg[1] is starting chromosome, arg[2] is ending
 args<-commandArgs(trailingOnly=TRUE)
-start<-1
-end<-2
+start<-args[1]
+end<-args[2]
 options(warn=1)
 
 #--- hg38 reference genome
