@@ -127,25 +127,19 @@ rm(ict,icl,iot,iol,insites) # clean up
 
 #--- Creates sequences for insertion
 load("./data/L1RankTable.rda")
-L1RankTable$score[1:40] <- L1RankTable$score[1:40]/sum(L1RankTable$score[1:40])
-l1indcs <- sample(x=c(1:40),copyNum,replace=TRUE,prob=L1RankTable$score[1:40])
 trpd <- read.table("./data/L1truncpd.csv",sep=",")
-tdpd <- read.table("./data/L1transdpd.txt",sep="\t")
-trfrcv <- sample(x = trpd[[1]], copyNum, replace = TRUE, prob = trpd[[2]])
-tdlenv <- sample(x = tdpd[[1]], copyNum, replace = TRUE, prob = tdpd[[2]])
-trlenv<-rep(0,copyNum)
+tdpd <- read.table("./data/L1transdpd.csv",sep=",")
+source("trtd.r")
+tmp <- process_L1s(genome,L1RankTable,trpd,tdpd,copyNum) 
+l1s <- tmp[[1]]
+l1indcs <- tmp[[2]]
+tdlen <- tmp[[3]]
+trlen <- tmp[[4]]
 
-for (i in 1:copyNum) {
-	len <- L1RankTable[[3]][l1indcs[i]]-L1RankTable[[2]][l1indcs[i]]
-	trlenv[i] <- ceiling(len*trfrcv[i])
-}
-
-gr <- GRanges(L1RankTable[[1]][l1indcs],IRanges(L1RankTable[[2]][l1indcs]+trlenv,L1RankTable[[3]][l1indcs]+tdlenv),strand=L1RankTable[[5]][l1indcs])
-l1s <- getSeq(genome,gr)
 cat("\nRunning time:\n")
 proc.time() - ptm
 cat("\nSaving image...\n")
 
 #--- Saves all to file 'gen-sim-out.rda'
-save(tdlenv,trlenv,l1s,l1indcs,sites_loci,sites_chrm,sites_strand,sites_classes,file="./data/gen-sim-out.rda")
+save(tdlen,trlen,l1s,l1indcs,sites_loci,sites_chrm,sites_strand,sites_classes,file="./data/gen-sim-out.rda")
 
