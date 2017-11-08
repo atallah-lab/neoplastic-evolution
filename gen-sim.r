@@ -129,7 +129,7 @@ rm(ict,icl,iot,iol,insites) # clean up
 load("./data/L1RankTable.rda")
 trpd <- read.table("./data/L1truncpd.csv",sep=",")
 tdpd <- read.table("./data/L1transdpd.csv",sep=",")
-source("trtd.r")
+source("process_L1s.r")
 tmp <- process_L1s(genome,L1RankTable,trpd,tdpd,copyNum) 
 l1s <- tmp[[1]]
 l1indcs <- tmp[[2]]
