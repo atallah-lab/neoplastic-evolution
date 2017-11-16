@@ -52,12 +52,6 @@ Monot et al. studed the relative enrichment of L1 insertion frequencies amongst 
 developing the genome-level retrotransposition model.
 * Dependencies: R(>= 2.8.0, Packages - Biostrings, BSgenome (for default hg38), GenomicRanges), Jupyter, IRKernel
 
-#### chrom-sim.r
-* Generates insertion sites in a single chromosome based on Snap-Velcro model
-* Dependencies: R(>= 2.8.0, Packages - Biostrings, BSgenome (for default hg38))
-```
-./chrom-sim.r <Copy Number> <Chromosome Name (e.g. chr1)>
-```
 
 #### mapchrom_parallel.r
 * Experiment in parallelization applied to mapchrom.r 
@@ -65,11 +59,13 @@ developing the genome-level retrotransposition model.
 ```
 ./mapchrom_parallel.r <chromosome start number (e.g. 1-23), <chromosome stop number (e.g. 2-24)>
 ```
-#### mapgen.r
+#### mapgenome.r
 * Maps potential insertion sites. Creates an .rda file for each chromosome in a provided range.
 ```
 ./mapgen.r <start chromosome # (e.g. 1)> <end chromosome # (e.g. 24)>
 ```
+#### mapsequence.r
+* Function to map potential insertion sites within a provided DNAString object
 
 #### get_sv_dist.r
 * Stores the counts of each EN site category for each chromosome in a 24 x 4 array.
@@ -80,8 +76,8 @@ developing the genome-level retrotransposition model.
 #### makeL1RankTable.r
 * Creates a .rda file containing the loci of retrotransposition-competent L1's in hg38 and their rankings.
 
-#### transduct_truncate.r
-* Simulates truncation and transduction of L1 elements selected for retrotransposition based on ranking.
+#### process_L1s.r
+* Function to simulate truncation and transduction of L1 elements selected for retrotransposition based on activity ranking.
 
 #### exchk.r
 * Example of function for checking whether a given breakpoint lies inside an exon
@@ -95,8 +91,6 @@ developing the genome-level retrotransposition model.
 ```
 ./gcbasedins.r <optional: input genome (fasta, default - hg19)> <output file name (fasta)>
 ```
-#### gff3_exonfilt.bash
-* Takes in a .gff3 file and outputs a tab-delimited file with 3 columns: chromosome name, exon start loc, exon end loc
 
 #### map_L1_consensus_sequences_hg38.R
 * Map an arbitrary set of L1 consensus sequences against hg38. 
