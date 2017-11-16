@@ -60,7 +60,7 @@ cat("\nChromosomes: ",names(chrmlist),"\n")
 #--- Load map file for chosen chromosomes
 for (i in names(chrmlist)) {
 	cat("\nLoading map file...")
-	load(paste0("./data/root_maps/",i,"map.rda"))
+	load(paste0("./data/root_maps/",i,".rda"))
 }
 cat("\n")
 
@@ -71,11 +71,12 @@ for (chrnm in names(chrmlist)) {
 	
 	cat("\nChromosome: ",chrnm)
 
-	ict<-get(paste0(chrnm,"ict"))
-	icl<-get(paste0(chrnm,"icl"))
-	iot<-get(paste0(chrnm,"iot"))
-	iol<-get(paste0(chrnm,"iol"))
-	insites<-get(paste0(chrnm,"insites"))
+	map<-get(paste0(chrnm,"Map"))
+        ict<-map$ict
+        icl<-map$icl
+        iot<-map$iot
+        iol<-map$iol
+        insites<-map$insites
 
 	chrcopyNum<-chrmlist[[chrnm]]
 
