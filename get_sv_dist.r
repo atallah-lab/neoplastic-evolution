@@ -32,13 +32,15 @@ chrmcnt<-array(0,dim=c(24,4))
 idx=1
 for (chrnm in names(genome)[1:24]){
 
-	load(paste0("./data/",chrnm,"map.rda")) # reads data file as '<chr1>map.rda'.
+	cat(paste("\nLoading map file...",chrnm))
+	load(paste0("./data/root_maps/",chrnm,".rda")) # reads data file as '<chr1>map.rda'.
 
-        ict<-get(paste0(chrnm,"ict")) # closed tight
-        icl<-get(paste0(chrnm,"icl")) # closed loose
-        iot<-get(paste0(chrnm,"iot")) # open tight
-        iol<-get(paste0(chrnm,"iol")) # open loose
-        insites<-get(paste0(chrnm,"insites"))
+	map<-get(paste0(chrnm,"Map")) 	# closed tight
+	ict<-map$ict			# closed loose
+	icl<-map$icl			# open tight
+	iot<-map$iot			# open loose
+	iol<-map$iol
+	insites<-map$insites
 
 	chrmpd[idx,]<-c(11.55*length(which(!is.na(ict))),7.25*length(which(!is.na(icl))),1.95*length(which(!is.na(iot))),1*length(which(!is.na(iol))))
 	chrmcnt[idx,]<-c(length(which(!is.na(ict))),length(which(!is.na(icl))),length(which(!is.na(iot))),length(which(!is.na(iol))))
