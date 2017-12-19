@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-mapSeq_SV <- function(seq) {
+mapsequence <- function(seq) {
 
 	start.time<-Sys.time()
 	
