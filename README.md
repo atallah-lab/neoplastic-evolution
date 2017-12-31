@@ -32,7 +32,7 @@ Each score for a velcro region is divided by this maximum score as a normalizati
 Monot et al. studed the relative enrichment of L1 insertion frequencies amongst the four snap-velcro categories in humans. They recorded the number of insertions observed at each type of EN site and divided this by the number of site-types in the reference genome (hg19 in their study). Amongst two datasets of human L1 insertions (Solyom, 2012; Lee, 2012) they found that the average relative enrichment for the closed/tight, closed/loose, open/tight, and open/loose categories was, respectively 11.55, 7.25, 1.95, 1.00. 
 
 
-## Code
+## Source Code
 
 #### L1-cellpop.r
 * Script for simulating evolution of a cell population, incorporating L1 retrotransposition events and response to mutations
