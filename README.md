@@ -34,8 +34,14 @@ Monot et al. studed the relative enrichment of L1 insertion frequencies amongst 
 
 ## Code
 
+#### L1-cellpop.r
+* Script for simulating evolution of a cell population, incorporating L1 retrotransposition events and response to mutations
+
+#### L1-cellpop.ipynb
+* Interactive notebook version of the L1-cellpop.r script
+
 #### gen-sim.r
-* Main function for simulating retrotransposition of L1 elements in hg38
+* Script for simulating retrotransposition of L1 elements in a single genome
 * Insertion site probabilities based on Snap-Velcro model (Monot et al., 2013)
 * Truncation modeled after Lee et al. (2012)
 * Transduction modeled after Goodier et al. (2000)
