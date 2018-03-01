@@ -239,21 +239,21 @@ maybeTranspose <- function(node,tnum) {
         return()
     }
     
+    nc <- node$ncells[length(node$ncells)] + round(node$ncells[length(node$ncells)]*node$r)
     # Sample from binomial distribution for number of transpositions
-    if (node$ncells < 4.2e9) {ntrans <- rbinom(1,node$ncells, cellP)} # rbinom() fails for large n
+    if (node$ncells[length(node$ncells)] < 4.2e9) {ntrans <- rbinom(1,node$ncells, cellP)} # rbinom() fails for large n
     else {ntrans <- node$ncells*cellP} # If n is too large, use the expected number of events (mean of distribution)
     if (ntrans > 0) {
-        simout <- gen_sim(genome,node,ntrans) 
+        simout <- gen_sim(genome,node,ntrans)
+        nc <- nc-ntrans
         for (i in 1:ntrans) {
             tmp <- update_geneann(exann,lapply(simout,'[',i),node$tes)
             r_tmp <- rank_clone(node$r, tmp, lapply(simout,'[',i)[[2]], lapply(simout,'[',i)[[3]],1.2,0.8)
             tmp<-mapply(append, lapply(simout,'[',i), node$tes, SIMPLIFY = FALSE)
             node$AddChild(tnum, ncells=1, r=r_tmp, tes=tmp)
-            node$ncells <- node$ncells-1
         }
     }
-    
-    node$ncells <- node$ncells + round(node$ncells*node$r)
+    node$ncells <- append(node$ncells,nc)
     
 }
 
@@ -272,7 +272,7 @@ NT <- 5 		# Number of time steps
 ######################################################################################
 
 CellPop <- Node$new(1)
-CellPop$ncells <- rootNCells
+CellPop$ncells <- c(rootNCells)
 CellPop$r <- rootDivRate
 CellPop$tes <- list(DNAStringSet(c("TTATTTA")),c("chr1"),c(1001140),c("+"))
 CellPop$r <- rank_clone(CellPop$r, exann, CellPop$tes[[2]], CellPop$tes[[3]])
