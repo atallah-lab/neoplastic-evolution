@@ -124,7 +124,7 @@ for (chrnm in names(genome)[start:end]) {
 
 	cat("Saving map file...\n")
 	wd <- getwd()
-	save(list=(paste0(chrnm,"Map")),file=paste(wd, "/data/root_maps/",chrnm,".rda",sep=""))
+	save(list=(paste0(chrnm,"Map")),file=paste(wd, "../data/root_maps/",chrnm,".rda",sep=""))
 	rm(list=c("insites","ict","icl","iot","iol"))
 	end.time <- Sys.time()
         print(end.time-start.time)

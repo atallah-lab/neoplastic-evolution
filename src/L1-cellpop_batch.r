@@ -16,6 +16,7 @@ load("../data/exann.rda")
 trpd <- read.table("../data/L1truncpd.csv",sep=",")
 tdpd <- read.table("../data/L1transdpd.csv",sep=",")
 for (i in names(Hsapiens)[1:24]){ # load all chromosome map files
+	cat(paste0("Loading map file...",i,"\n"))
         load(paste0("../data/root_maps/",i,".rda"))
 }
 strdict<-c("+","-")
