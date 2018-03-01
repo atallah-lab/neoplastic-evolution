@@ -16,8 +16,8 @@ load("../data/exann.rda")
 trpd <- read.table("../data/L1truncpd.csv",sep=",")
 tdpd <- read.table("../data/L1transdpd.csv",sep=",")
 for (i in names(Hsapiens)[1:24]){ # load all chromosome map files
-	cat(paste0("Loading map file...",i,"\n"))
-        load(paste0("../data/root_maps/",i,".rda"))
+        cat(paste0("Loading map file...",i,"\n"))
+	load(paste0("../data/root_maps/",i,".rda"))
 }
 strdict<-c("+","-")
 names(strdict)<-c(1,2)
@@ -261,34 +261,71 @@ maybeTranspose <- function(node,tnum) {
 #--- Set simulation parameters
 ######################################################################################
 
-ENifrc<- .1       	# Fraction of endonuclease-independent (random) insertions
-rootNCells <- 1   	# Initial number of cells in root clone
-rootDivRate <- 1  	# Initial division rate
-cellP <- 0.01     	# Probability of transposition / timestep of a single cell
+ENifrc<- .1       # Fraction of endonuclease-independent (random) insertions
+rootNCells <- 1   # Initial number of cells in root clone
+rootDivRate <- 1  # Initial division rate
+cellP <- 0.01     # Probability of transposition / timestep of a single cell
 
-NT <- 5 		# Number of time steps
+NT <- 5           # Number of time steps
 
 #--- Generate clone tree
 ######################################################################################
 
-CellPop <- Node$new(1)
-CellPop$ncells <- rootNCells
-CellPop$r <- rootDivRate
-CellPop$tes <- list(DNAStringSet(c("TTATTTA")),c("chr1"),c(1001140),c("+"))
-CellPop$r <- rank_clone(CellPop$r, exann, CellPop$tes[[2]], CellPop$tes[[3]])
-CellPop$r
+gainp = c(rep(1.1,3),rep(1.2,3),rep(1.3,3),rep(1.4,3),rep(1.5,3),rep(1.6,3),rep(1.7,3),rep(1.8,3))
+lossp = c(rep(.9,3),rep(.8,3),rep(.7,3),rep(.6,3),rep(.5,3),rep(.4,3),rep(.3,3),rep(.2,3))
 
-ptm <- proc.time()
-for (i in 2:NT) {
+for (nrun in 1:24) {
 
-    CellPop$Do(maybeTranspose,i)
-               
+    CellPop <- Node$new(1)
+    CellPop$ncells <- rootNCells
+    CellPop$r <- rootDivRate
+    # CellPop$tes <- list(DNAStringSet(c("TCGA")),c("chr1"),c(1013467),c("+"))
+    CellPop$tes <- list(DNAStringSet(),c(),c(),c())
+    # CellPop$r <- rank_clone(CellPop$r, exann, CellPop$tes[[2]], CellPop$tes[[3]], 1.2, 0.8)
+    # CellPop$r
+
+    maybeTranspose <- function(node,tnum) {
+
+        if (node$r==0){
+            return()
+        }
+
+        if (sample(x=c(0,1),1,prob=c(1-node$tp, node$tp))) {
+            simout <- gen_sim(genome,node,1)#round(runif(1,1,3)))
+            exann <- update_geneann(exann,simout,node$tes)
+            r_tmp <- rank_clone(node$r, exann, simout[[2]], simout[[3]],gainp[nrun],lossp[nrun])
+            tmp<-mapply(append, simout, node$tes, SIMPLIFY = FALSE)
+            if (node$ncells>1) {
+                node$ncells <- node$ncells-1;
+                node$AddChild(tnum, r=r_tmp, ctr=r_tmp, tp=intp, tes=tmp, ncells=1)
+            } else {
+                node$r=r_tmp
+                node$tes=tmp
+            }
+        }
+
+        node$ctr <- node$ctr - 1
+        if (node$ctr==0) {
+            node$ncells <- node$ncells*2 # Double number of cells
+            if (node$tp*2 < 1) {node$tp <- node$tp*2} # Double transposition probability
+            else {node$tp <- 1}
+            node$ctr <- node$r
+        }
+
+    }
+
+    ptm <- proc.time()
+    for (i in 2:NT) {
+
+            CellPop$Do(maybeTranspose,i)
+
+    }
+    print(proc.time() - ptm)
+
+    save("CellPop",file=paste0("../../Data/SimOut3/",nrun,".rda"))
+    rm(CellPop)
+
 }
-proc.time() - ptm
-
-print(CellPop,'ncells')
-
-save(CellPop, file=paste0('../data/L1-cellpop-out.rda'))
 
 
 
