@@ -241,7 +241,7 @@ maybeTranspose <- function(node,tnum) {
     
     # Sample from binomial distribution for number of transpositions
     if (node$ncells < 4.2e9) {ntrans <- rbinom(1,node$ncells, cellP)} # rbinom() fails for large n
-    else (ntrans <- node$ncells*cellP) # If n is too large, use the expected number of events (mean of distribution)
+    else {ntrans <- node$ncells*cellP} # If n is too large, use the expected number of events (mean of distribution)
     if (ntrans > 0) {
         simout <- gen_sim(genome,node,ntrans) 
         for (i in 1:ntrans) {
