@@ -17,7 +17,7 @@ trpd <- read.table("../data/L1truncpd.csv",sep=",")
 tdpd <- read.table("../data/L1transdpd.csv",sep=",")
 for (i in names(Hsapiens)[1:24]){ # load all chromosome map files
 	cat(paste0("Loading map file...",i,"\n"))
-        load(paste0("../data/root_maps/",i,".rda"))
+    load(paste0("../data/root_maps/",i,".rda"))
 }
 strdict<-c("+","-")
 names(strdict)<-c(1,2)
@@ -34,7 +34,6 @@ names(strdict)<-c(1,2)
 #   copyNum       (integer) number of L1 insertions to simulate
 #
 # OUTPUT: (list) inserted sequences, sites, and strand
-
 gen_sim <- function(genome,node,copyNum) {
 
         sites_loci<-c() # Initialize arrays for storing simulated ins. site data
@@ -127,7 +126,6 @@ gen_sim <- function(genome,node,copyNum) {
 #   sites_loci    (character vector) insertion positions (in the respective chromosome)
 #
 # OUTPUT: (float) possibly updated division rate
-
 rank_clone <- function(r, geneann, sites_chrm, sites_loci, gainp, lossp) {
 
     gene_hits=0; # set counter to zero
@@ -168,7 +166,6 @@ rank_clone <- function(r, geneann, sites_chrm, sites_loci, gainp, lossp) {
 #   l1s           (DNAStringSet) l1 sequences and orientation 
 #
 # OUTPUT: (list) updated chromosome annotation
-
 update_chrom_map <- function(chrnm,chrMap,sites_chrm,sites_loci,l1s) {
 
         if (length(which(sites_chrm==chrnm))==0){
@@ -209,7 +206,6 @@ update_chrom_map <- function(chrnm,chrMap,sites_chrm,sites_loci,l1s) {
 #   tes             (list of lists) Node tes
 #
 # OUTPUT: geneann
-
 update_geneann <- function(geneann, simout, tes) {
     
     tmp = mapply(append, simout, tes, SIMPLIFY = FALSE)
@@ -232,7 +228,6 @@ update_geneann <- function(geneann, simout, tes) {
 #   tnum          (integer) time step number
 #
 # OUTPUT: void
-
 maybeTranspose <- function(node,tnum) {
     
     if (node$r==0){ # If the division rate of the clone is zero, skip the node
@@ -264,7 +259,7 @@ maybeTranspose <- function(node,tnum) {
 ENifrc<- .1       	# Fraction of endonuclease-independent (random) insertions
 rootNCells <- 1   	# Initial number of cells in root clone
 rootDivRate <- 1  	# Initial division rate
-cellP <- 0.01     	# Probability of transposition / timestep of a single cell
+cellP <- 0.5     	# Probability of transposition / timestep of a single cell
 
 NT <- 5 		# Number of time steps
 
@@ -286,7 +281,7 @@ for (i in 2:NT) {
 }
 proc.time() - ptm
 
-print(CellPop,'ncells')
+# print(CellPop,'ncells')
 
 save(CellPop, file=paste0('../data/L1-cellpop-out.rda'))
 
