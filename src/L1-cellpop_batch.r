@@ -276,8 +276,8 @@ lossp = c(rep(.9,3),rep(.8,3),rep(.7,3),rep(.6,3),rep(.5,3),rep(.4,3),rep(.3,3),
 for (nrun in 1:24) {
 
     CellPop <- Node$new(1)
-    CellPop$ncells <- inPopSize
-    CellPop$r <- inDivRate
+    CellPop$ncells <- rootNCells
+    CellPop$r <- rootDivRate
     # CellPop$tes <- list(DNAStringSet(c("TCGA")),c("chr1"),c(1013467),c("+"))
     CellPop$tes <- list(DNAStringSet(),c(),c(),c())
     # CellPop$r <- rank_clone(CellPop$r, exann, CellPop$tes[[2]], CellPop$tes[[3]], 1.2, 0.8)
