@@ -142,10 +142,8 @@ rank_clone <- function(r, geneann, sites_chrm, sites_loci, gainp, lossp) {
         tsg_hits =tsg_hits+length(which(tmp_hits==TRUE))
     }
 
-    if (gene_hits > 0) {
-        r=r*lossp^gene_hits
-    } else if (tsg_hits > 0) {
-        r = r*gainp^tsg_hits
+    if (gene_hits > 0 || tsg_hits > 0){
+	            r=r*(lossp^gene_hits)(gainp^gene_hits)
     }
 
     if (r < 0.25) { # If the division rate is below 0.25, the clone stops growing
