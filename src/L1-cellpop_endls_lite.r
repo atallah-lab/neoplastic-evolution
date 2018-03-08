@@ -242,7 +242,7 @@ maybeTranspose <- function(node) {
         for (i in 1:ntrans) {
             l<<-l+1
             # tmp <- update_anno(exann,lapply(simout,'[',i),node$tes)
-            r_tmp <- rank_clone(node$r, tmp, lapply(simout,'[',i)[[2]], lapply(simout,'[',i)[[3]],1.2,0.8)
+            r_tmp <- rank_clone(node$r, exann, lapply(simout,'[',i)[[2]], lapply(simout,'[',i)[[3]],1.2,0.8)
             tmp<-mapply(append, lapply(simout,'[',i), node$tes, SIMPLIFY = FALSE)
             node$AddChild(l, ncells=1, r=r_tmp, tes=tmp)
         }
