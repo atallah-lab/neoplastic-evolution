@@ -121,17 +121,17 @@ gen_sim <- function(genome,node,copyNum) {
 #
 # INPUT:
 #   r             (float) division rate
-#   geneann       (data frame) Annotation of genes (i.e. chromosome   start   end)
+#   anno       (data frame) Annotation of genes (i.e. chromosome   start   end)
 #   sites_chrm    (numeric vector) chromosomes containing L1 insertions for the clone
 #   sites_loci    (character vector) insertion positions (in the respective chromosome)
 #
 # OUTPUT: (float) possibly updated division rate
-rank_clone <- function(r, geneann, sites_chrm, sites_loci, gainp, lossp) {
+rank_clone <- function(r, anno, sites_chrm, sites_loci, gainp, lossp) {
 
     gene_hits=0; # set counter to zero
     tsg_hits=0;
     for (i in 1:length(unique(sites_chrm))) { # loop over chromosomes inserted into
-        tmp=geneann[geneann$chrom==unique(sites_chrm)[i],] # reduce annotation table to entries for current chrom
+        tmp=anno[anno$chrom==unique(sites_chrm)[i],] # reduce annotation table to entries for current chrom
         chrmann_ntsg=tmp[tmp$istsg==0,]
         chrmann_tsg =tmp[tmp$istsg==1,]
         tmp = sites_loci[sites_chrm==unique(sites_chrm)[i]] # reduce insertion loci to entries for current chrom
@@ -143,7 +143,7 @@ rank_clone <- function(r, geneann, sites_chrm, sites_loci, gainp, lossp) {
     }
 
     if (gene_hits > 0 || tsg_hits > 0){
-	            r=r*(lossp^gene_hits)(gainp^gene_hits)
+	            r=r*(lossp^gene_hits)*(gainp^tsg_hits)
     }
 
     if (r < 0.25) { # If the division rate is below 0.25, the clone stops growing
@@ -199,23 +199,23 @@ update_chrom_map <- function(chrnm,chrMap,sites_chrm,sites_loci,l1s) {
 # PURPOSE: Updates the gene annotation of the clone
 #
 # INPUT:
-#   geneann         (data frame) Annotation of genes (i.e. chromosome   start   end)
+#   anno         (data frame) Annotation of genes (i.e. chromosome   start   end)
 #   simout          (list of lists) gen_sim output
 #   tes             (list of lists) Node tes
 #
-# OUTPUT: geneann
-update_geneann <- function(geneann, simout, tes) {
+# OUTPUT: anno
+update_anno <- function(anno, simout, tes) {
     
     tmp = mapply(append, simout, tes, SIMPLIFY = FALSE)
     for (i in 1:length(tmp[[3]])) {
         # Shift the start loci of genes with start loci beyond the insertion by the width of the L1
-        geneann[geneann$chrom==tmp[[2]][i] & geneann$start>tmp[[3]][i],]$start <- geneann[geneann$chrom==tmp[[2]][i] & geneann$start>tmp[[3]][i],]$start + width(tmp[[1]][i])  
+        anno[anno$chrom==tmp[[2]][i] & anno$start>tmp[[3]][i],]$start <- anno[anno$chrom==tmp[[2]][i] & anno$start>tmp[[3]][i],]$start + width(tmp[[1]][i])  
         # Shift the end loci of genes with start loci beyond the insertion by the width of the L1
-        geneann[geneann$chrom==tmp[[2]][i] & geneann$start>tmp[[3]][i],]$end <- geneann[geneann$chrom==tmp[[2]][i] & geneann$start>tmp[[3]][i],]$end + width(tmp[[1]][i])  
+        anno[anno$chrom==tmp[[2]][i] & anno$start>tmp[[3]][i],]$end <- anno[anno$chrom==tmp[[2]][i] & anno$start>tmp[[3]][i],]$end + width(tmp[[1]][i])  
         # Shift the end locus of any gene with only end locus beyond the insertion by the width of the L1
-        geneann[geneann$chrom==tmp[[2]][i] & geneann$end>tmp[[3]][i] & geneann$start<tmp[[3]][i],]$end <- geneann[geneann$chrom==tmp[[2]][i] & geneann$end>tmp[[3]][i] & geneann$start<tmp[[3]][i],]$end + width(tmp[[1]][i])        
+        anno[anno$chrom==tmp[[2]][i] & anno$end>tmp[[3]][i] & anno$start<tmp[[3]][i],]$end <- anno[anno$chrom==tmp[[2]][i] & anno$end>tmp[[3]][i] & anno$start<tmp[[3]][i],]$end + width(tmp[[1]][i])        
     }
-    return(geneann) 
+    return(anno) 
 }
 
 
@@ -241,7 +241,7 @@ maybeTranspose <- function(node) {
         nc <- nc-ntrans
         for (i in 1:ntrans) {
             l<<-l+1
-            tmp <- update_geneann(exann,lapply(simout,'[',i),node$tes)
+            tmp <- update_anno(exann,lapply(simout,'[',i),node$tes)
             r_tmp <- rank_clone(node$r, tmp, lapply(simout,'[',i)[[2]], lapply(simout,'[',i)[[3]],1.2,0.8)
             tmp<-mapply(append, lapply(simout,'[',i), node$tes, SIMPLIFY = FALSE)
             node$AddChild(l, ncells=1, r=r_tmp, tes=tmp)
@@ -274,8 +274,8 @@ CellPop$r
 while (1) {
 	ptm <- proc.time()
 
-    CellPop$Do(maybeTranspose)
-	save(CellPop, file=paste0('../../Data/L1-cellpop_4evr_out_2.rda'))              
+    	CellPop$Do(maybeTranspose)
+	save(CellPop, file=paste0('../../Data/L1-cellpop_4evr_out_3.rda'))              
 
 	print(proc.time()-ptm)
 }

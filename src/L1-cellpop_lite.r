@@ -53,7 +53,7 @@ gen_sim <- function(genome,node,copyNum) {
 #                 cat("\nChromosome: ",chrnm)
 
                 map<-get(paste0(chrnm,"Map"))
-                map<-update_chrom_map(chrnm,map,node$tes[[2]],node$tes[[3]],node$tes[[1]])
+                # map<-update_chrom_map(chrnm,map,node$tes[[2]],node$tes[[3]],node$tes[[1]])
                 ict<-map[[2]]
                 icl<-map[[3]]
                 iot<-map[[4]]
@@ -143,7 +143,7 @@ rank_clone <- function(r, anno, sites_chrm, sites_loci, gainp, lossp) {
     }
 
     if (gene_hits > 0 || tsg_hits > 0){
-	    r=r*(lossp^gene_hits)*(gainp^tsg_hits)
+	            r=r*(lossp^gene_hits)*(gainp^tsg_hits)
     }
 
     if (r < 0.25) { # If the division rate is below 0.25, the clone stops growing
@@ -164,37 +164,37 @@ rank_clone <- function(r, anno, sites_chrm, sites_loci, gainp, lossp) {
 #   l1s           (DNAStringSet) l1 sequences and orientation 
 #
 # OUTPUT: (list) updated chromosome annotation
-update_chrom_map <- function(chrnm,chrMap,sites_chrm,sites_loci,l1s) {
+# update_chrom_map <- function(chrnm,chrMap,sites_chrm,sites_loci,l1s) {
 
-        if (length(which(sites_chrm==chrnm))==0){
-                return(chrMap)
-        }
+#         if (length(which(sites_chrm==chrnm))==0){
+#                 return(chrMap)
+#         }
 
-        ict<-chrMap[[2]]
-        icl<-chrMap[[3]]
-        iot<-chrMap[[4]]
-        iol<-chrMap[[5]]
-        insites<-chrMap[[1]]
+#         ict<-chrMap[[2]]
+#         icl<-chrMap[[3]]
+#         iot<-chrMap[[4]]
+#         iol<-chrMap[[5]]
+#         insites<-chrMap[[1]]
 
-        chrloci = sites_loci[sites_chrm==chrnm] # Get the sites where insertions occurred in the chromosome
-        chrl1s = l1s[sites_chrm==chrnm] # Get the L1s elements which were inserted    
+#         chrloci = sites_loci[sites_chrm==chrnm] # Get the sites where insertions occurred in the chromosome
+#         chrl1s = l1s[sites_chrm==chrnm] # Get the L1s elements which were inserted    
     
-        for (i in 1:length(chrloci)) { # Loop over the simulated insertion sites
-                insites[which(is.na(insites))]<- -1 # Replace NA with -1
-                indx <- insites>chrloci[i] # Get indices of target sites which lie downstream of the site
-                insites[indx] <- insites[indx] + width(chrl1s[i]) # Shift the target sites by the length of the L1
-                l1_map <- mapsequence(chrl1s[i]) # Map target sites in the L1
-                l1_map$insites <- l1_map$insites + chrloci[i] # Convert L1 loci to chromosome loci
-                insites <- rbind(insites,l1_map$insites) # Add target sites within L1 to chrom map
-                ict <- rbind(ict,l1_map$ict)
-                icl <- rbind(icl,l1_map$icl)
-                iot <- rbind(iot,l1_map$iot)
-                iol <- rbind(iol,l1_map$iol)
-        }
+#         for (i in 1:length(chrloci)) { # Loop over the simulated insertion sites
+#                 insites[which(is.na(insites))]<- -1 # Replace NA with -1
+#                 indx <- insites>chrloci[i] # Get indices of target sites which lie downstream of the site
+#                 insites[indx] <- insites[indx] + width(chrl1s[i]) # Shift the target sites by the length of the L1
+#                 l1_map <- mapsequence(chrl1s[i]) # Map target sites in the L1
+#                 l1_map$insites <- l1_map$insites + chrloci[i] # Convert L1 loci to chromosome loci
+#                 insites <- rbind(insites,l1_map$insites) # Add target sites within L1 to chrom map
+#                 ict <- rbind(ict,l1_map$ict)
+#                 icl <- rbind(icl,l1_map$icl)
+#                 iot <- rbind(iot,l1_map$iot)
+#                 iol <- rbind(iol,l1_map$iol)
+#         }
 
-        return(list(insites,ict,icl,iot,iol))
+#         return(list(insites,ict,icl,iot,iol))
 
-}
+# }
 
 # PURPOSE: Updates the gene annotation of the clone
 #
@@ -204,19 +204,19 @@ update_chrom_map <- function(chrnm,chrMap,sites_chrm,sites_loci,l1s) {
 #   tes             (list of lists) Node tes
 #
 # OUTPUT: anno
-update_anno <- function(anno, simout, tes) {
+# update_anno <- function(anno, simout, tes) {
     
-    tmp = mapply(append, simout, tes, SIMPLIFY = FALSE)
-    for (i in 1:length(tmp[[3]])) {
-        # Shift the start loci of genes with start loci beyond the insertion by the width of the L1
-        anno[anno$chrom==tmp[[2]][i] & anno$start>tmp[[3]][i],]$start <- anno[anno$chrom==tmp[[2]][i] & anno$start>tmp[[3]][i],]$start + width(tmp[[1]][i])  
-        # Shift the end loci of genes with start loci beyond the insertion by the width of the L1
-        anno[anno$chrom==tmp[[2]][i] & anno$start>tmp[[3]][i],]$end <- anno[anno$chrom==tmp[[2]][i] & anno$start>tmp[[3]][i],]$end + width(tmp[[1]][i])  
-        # Shift the end locus of any gene with only end locus beyond the insertion by the width of the L1
-        anno[anno$chrom==tmp[[2]][i] & anno$end>tmp[[3]][i] & anno$start<tmp[[3]][i],]$end <- anno[anno$chrom==tmp[[2]][i] & anno$end>tmp[[3]][i] & anno$start<tmp[[3]][i],]$end + width(tmp[[1]][i])        
-    }
-    return(anno) 
-}
+#     tmp = mapply(append, simout, tes, SIMPLIFY = FALSE)
+#     for (i in 1:length(tmp[[3]])) {
+#         # Shift the start loci of genes with start loci beyond the insertion by the width of the L1
+#         anno[anno$chrom==tmp[[2]][i] & anno$start>tmp[[3]][i],]$start <- anno[anno$chrom==tmp[[2]][i] & anno$start>tmp[[3]][i],]$start + width(tmp[[1]][i])  
+#         # Shift the end loci of genes with start loci beyond the insertion by the width of the L1
+#         anno[anno$chrom==tmp[[2]][i] & anno$start>tmp[[3]][i],]$end <- anno[anno$chrom==tmp[[2]][i] & anno$start>tmp[[3]][i],]$end + width(tmp[[1]][i])  
+#         # Shift the end locus of any gene with only end locus beyond the insertion by the width of the L1
+#         anno[anno$chrom==tmp[[2]][i] & anno$end>tmp[[3]][i] & anno$start<tmp[[3]][i],]$end <- anno[anno$chrom==tmp[[2]][i] & anno$end>tmp[[3]][i] & anno$start<tmp[[3]][i],]$end + width(tmp[[1]][i])        
+#     }
+#     return(anno) 
+# }
 
 
 # PURPOSE: To call gen_sim.r with some probability (probability of transposition, tp) for a clone at a time step
@@ -226,93 +226,63 @@ update_anno <- function(anno, simout, tes) {
 #   tnum          (integer) time step number
 #
 # OUTPUT: void
-# maybeTranspose <- function(node) {
+maybeTranspose <- function(node) {
     
-#     if (node$r==0){ # If the division rate of the clone is zero, skip the node
-#         return()
-#     }
-    
-#     nc <- node$ncells[length(node$ncells)] + round(node$ncells[length(node$ncells)]*node$r)
-#     # Sample from binomial distribution for number of transpositions
-#     if (nc < 4.2e9) {ntrans <- rbinom(1,nc,cellP)} # rbinom() fails for large n
-#     else {ntrans <- nc*cellP} # If n is too large, use the expected number of events (mean of distribution)
-#     if (ntrans > 0) {
-#         simout <- gen_sim(genome,node,ntrans)
-#         nc <- nc-ntrans
-#         for (i in 1:ntrans) {
-#             l<<-l+1
-#             tmp <- update_anno(exann,lapply(simout,'[',i),node$tes)
-#             r_tmp <- rank_clone(node$r, tmp, lapply(simout,'[',i)[[2]], lapply(simout,'[',i)[[3]],1.2,0.8)
-#             tmp<-mapply(append, lapply(simout,'[',i), node$tes, SIMPLIFY = FALSE)
-#             node$AddChild(l, ncells=1, r=r_tmp, tes=tmp)
-#         }
-#     }   
-#     node$ncells <- append(node$ncells,nc)
-# }
+    if (node$r==0){ # If the division rate of the clone is zero, skip the node
+        return()
+    }
+    # Update number of cells
+    nc <- node$ncells[length(node$ncells)] + round(node$ncells[length(node$ncells)]*node$r)
+    # Sample from binomial distribution for number of transpositions
+    if (nc < 4.2e9) {ntrans <- rbinom(1,nc,cellP)} # rbinom() fails for large n
+    else {ntrans <- nc*cellP} # If n is too large, use the expected number of events (mean of distribution)
+    # Simulate any transpositions
+    if (ntrans > 0) {
+        simout <- gen_sim(genome,node,ntrans)
+        nc <- nc-ntrans
+        for (i in 1:ntrans) {
+            l<<-l+1
+            # tmp <- update_anno(exann,lapply(simout,'[',i),node$tes)
+            r_tmp <- rank_clone(node$r, tmp, lapply(simout,'[',i)[[2]], lapply(simout,'[',i)[[3]],1.2,0.8)
+            tmp<-mapply(append, lapply(simout,'[',i), node$tes, SIMPLIFY = FALSE)
+            node$AddChild(l, ncells=1, r=r_tmp, tes=tmp)
+        }
+    }   
+    node$ncells <- append(node$ncells,nc)
+}
 
 
 #--- Set simulation parameters
 ######################################################################################
+l<-1
+ENifrc<- .1       	# Fraction of endonuclease-independent (random) insertions
+rootNCells <- 1   	# Initial number of cells in root clone
+rootDivRate <- 1  	# Initial division rate
+cellP <- 0.5     	# Probability of transposition / timestep of a single cell
 
-ENifrc<- .1       # Fraction of endonuclease-independent (random) insertions
-rootNCells <- 1   # Initial number of cells in root clone
-rootDivRate <- 1  # Initial division rate
-cellP <- 0.05     # Probability of transposition / timestep of a single cell
-
-NT <- 19          # Number of time steps
+NT <- 5 		# Number of time steps
 
 #--- Generate clone tree
 ######################################################################################
 
-gainp = c(rep(1.2,3),rep(1.5,3),rep(2,3),rep(2.5,3),rep(3,3))
-lossp = c(rep(.9,3),rep(.75,3),rep(.5,3),rep(.25,3),rep(.2,3))
+CellPop <- Node$new(1)
+CellPop$ncells <- c(rootNCells)
+CellPop$r <- rootDivRate
+CellPop$tes <- list(DNAStringSet(c("TTATTTA")),c("chr1"),c(1001140),c("+"))
+CellPop$r <- rank_clone(CellPop$r, exann, CellPop$tes[[2]], CellPop$tes[[3]])
+CellPop$r
 
-for (nrun in 1:15) {
-    l<-1
-    CellPop <- Node$new(1)
-    CellPop$ncells <- c(rootNCells)
-    CellPop$r <- rootDivRate
-    # CellPop$tes <- list(DNAStringSet(c("TCGA")),c("chr1"),c(1013467),c("+"))
-    CellPop$tes <- list(DNAStringSet(),c(),c(),c())
-    # CellPop$r <- rank_clone(CellPop$r, exann, CellPop$tes[[2]], CellPop$tes[[3]], 1.2, 0.8)
-    # CellPop$r
+ptm <- proc.time()
+for (i in 2:NT) {
 
-    maybeTranspose <- function(node) {
-
-        if (node$r==0){ # If the division rate of the clone is zero, skip the node
-            return()
-        }
-
-        nc <- node$ncells[length(node$ncells)] + round(node$ncells[length(node$ncells)]*node$r)
-        # Sample from binomial distribution for number of transpositions
-        if (nc < 4.2e9) {ntrans <- rbinom(1,nc,cellP)} # rbinom() fails for large n
-        else {ntrans <- nc*cellP} # If n is too large, use the expected number of events (mean of distribution)
-        if (ntrans > 0) {
-            simout <- gen_sim(genome,node,ntrans)
-            nc <- nc-ntrans
-            for (i in 1:ntrans) {
-                l<<-l+1
-                tmp <- update_anno(exann,lapply(simout,'[',i),node$tes)
-                r_tmp <- rank_clone(node$r, tmp, lapply(simout,'[',i)[[2]], lapply(simout,'[',i)[[3]],gainp[nrun],lossp[nrun])
-                tmp<-mapply(append, lapply(simout,'[',i), node$tes, SIMPLIFY = FALSE)
-                node$AddChild(l, ncells=1, r=r_tmp, tes=tmp)
-            }
-        }   
-        node$ncells <- append(node$ncells,nc)
-    }
-
-    ptm <- proc.time()
-    for (i in 2:NT) {
-
-            CellPop$Do(maybeTranspose)
-
-    }
-    print(proc.time() - ptm)
-
-    save("CellPop",file=paste0("../../Data/SimOut4/",nrun,".rda"))
-    rm(CellPop)
-
+    CellPop$Do(maybeTranspose)
+               
 }
+proc.time() - ptm
+
+# print(CellPop,'ncells')
+
+save(CellPop, file=paste0('../data/L1-cellpop_lite-out.rda'))
 
 
 
