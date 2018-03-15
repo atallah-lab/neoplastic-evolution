@@ -143,7 +143,7 @@ rank_clone <- function(r, anno, sites_chrm, sites_loci, gainp, lossp) {
     }
 
     if (gene_hits > 0 || tsg_hits > 0){
-	            r=r*(lossp^gene_hits)*(gainp^tsg_hits)
+	    r=r*(lossp^gene_hits)*(gainp^tsg_hits)
     }
 
     if (r < 0.25) { # If the division rate is below 0.25, the clone stops growing
@@ -275,7 +275,7 @@ while (1) {
 	ptm <- proc.time()
 
     	CellPop$Do(maybeTranspose)
-	save(CellPop, file=paste0('../../Data/L1-cellpop_endls_lite_out.rda'))              
+	save(CellPop, file=paste0('../../Data/L1-cellpop_endls_lite_out2.rda'))              
 
 	print(proc.time()-ptm)
 }

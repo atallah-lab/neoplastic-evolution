@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
 # -----------------------------------------------------------------------------
-# mapgen.r #NAMING
+# mapgenome.r
 
 # Maps potential insertion sites based on the 'Snap-Velcro' model described 
 # in Clement Monot, et al. (2013) "The Specificity and Flexibility of L1 Reverse 

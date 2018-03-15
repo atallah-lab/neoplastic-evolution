@@ -146,9 +146,9 @@ rank_clone <- function(r, anno, sites_chrm, sites_loci, gainp, lossp) {
 	    r=r*(lossp^gene_hits)*(gainp^tsg_hits)
     }
 
-    if (r < 0.25) { # If the division rate is below 0.25, the clone stops growing
-        r<-0
-    }
+   # if (r < 0.25) { # If the division rate is below 0.25, the clone stops growing
+   #     r<-0
+   # }
 
     return(r)
 }
@@ -264,53 +264,58 @@ NT <- 19          # Number of time steps
 #--- Generate clone tree
 ######################################################################################
 
-gainp = c(rep(1.2,3),rep(1.5,3),rep(2,3),rep(2.5,3),rep(3,3))
-lossp = c(rep(.9,3),rep(.75,3),rep(.5,3),rep(.25,3),rep(.2,3))
+gainp <- c(1.2,1.4,1.6,1.8,2)
+lossp <- c(0.8,0.6,0.4,0.2,0.0)
+nrun <- 0
+for (sdi in 1:5) {
+	for (spi in 1:5) {
+	    l<-1
+	    CellPop <- Node$new(1)
+	    CellPop$ncells <- c(rootNCells)
+	    CellPop$r <- rootDivRate
+	    # CellPop$tes <- list(DNAStringSet(c("TCGA")),c("chr1"),c(1013467),c("+"))
+	    CellPop$tes <- list(DNAStringSet(),c(),c(),c())
+	    # CellPop$r <- rank_clone(CellPop$r, exann, CellPop$tes[[2]], CellPop$tes[[3]], 1.2, 0.8)
+	    # CellPop$r
 
-for (nrun in 1:15) {
-    l<-1
-    CellPop <- Node$new(1)
-    CellPop$ncells <- c(rootNCells)
-    CellPop$r <- rootDivRate
-    # CellPop$tes <- list(DNAStringSet(c("TCGA")),c("chr1"),c(1013467),c("+"))
-    CellPop$tes <- list(DNAStringSet(),c(),c(),c())
-    # CellPop$r <- rank_clone(CellPop$r, exann, CellPop$tes[[2]], CellPop$tes[[3]], 1.2, 0.8)
-    # CellPop$r
+	    maybeTranspose <- function(node) {
+		
+		if (is.na(node$r)) {return()}
+	        if (node$r==0){ # If the division rate of the clone is zero, skip the node
+	            return()
+	        }
 
-    maybeTranspose <- function(node) {
+	        nc <- node$ncells[length(node$ncells)] + round(node$ncells[length(node$ncells)]*node$r)
+	        # Sample from binomial distribution for number of transpositions
+	        if (nc < 4.2e9) {ntrans <- rbinom(1,nc,cellP)} # rbinom() fails for large n
+	        else {ntrans <- nc*cellP} # If n is too large, use the expected number of events (mean of distribution)
+	        if (ntrans > 0) {
+	            simout <- gen_sim(genome,node,ntrans)
+	            nc <- nc-ntrans
+	            for (i in 1:ntrans) {
+	                l<<-l+1
+	                tmp <- update_anno(exann,lapply(simout,'[',i),node$tes)
+	                r_tmp <- rank_clone(node$r, tmp, lapply(simout,'[',i)[[2]], lapply(simout,'[',i)[[3]],gainp[sdi],lossp[spi])
+	                tmp<-mapply(append, lapply(simout,'[',i), node$tes, SIMPLIFY = FALSE)
+	                node$AddChild(l, ncells=1, r=r_tmp, tes=tmp)
+	            }
+	        }   
+	        node$ncells <- append(node$ncells,nc)
+	    }
 
-        if (node$r==0){ # If the division rate of the clone is zero, skip the node
-            return()
-        }
+	    ptm <- proc.time()
+	    for (n in 2:NT) {
 
-        nc <- node$ncells[length(node$ncells)] + round(node$ncells[length(node$ncells)]*node$r)
-        # Sample from binomial distribution for number of transpositions
-        if (nc < 4.2e9) {ntrans <- rbinom(1,nc,cellP)} # rbinom() fails for large n
-        else {ntrans <- nc*cellP} # If n is too large, use the expected number of events (mean of distribution)
-        if (ntrans > 0) {
-            simout <- gen_sim(genome,node,ntrans)
-            nc <- nc-ntrans
-            for (i in 1:ntrans) {
-                l<<-l+1
-                tmp <- update_anno(exann,lapply(simout,'[',i),node$tes)
-                r_tmp <- rank_clone(node$r, tmp, lapply(simout,'[',i)[[2]], lapply(simout,'[',i)[[3]],gainp[nrun],lossp[nrun])
-                tmp<-mapply(append, lapply(simout,'[',i), node$tes, SIMPLIFY = FALSE)
-                node$AddChild(l, ncells=1, r=r_tmp, tes=tmp)
-            }
-        }   
-        node$ncells <- append(node$ncells,nc)
-    }
+	            CellPop$Do(maybeTranspose)
 
-    ptm <- proc.time()
-    for (i in 2:NT) {
+	    }
+	    print(proc.time() - ptm)
 
-            CellPop$Do(maybeTranspose)
+	    save("CellPop",file=paste0("../../Data/SimOut1/",nrun,".rda"))
+	    rm(CellPop)
+	    nrun <- nrun+1
 
-    }
-    print(proc.time() - ptm)
-
-    save("CellPop",file=paste0("../../Data/SimOut4/",nrun,".rda"))
-    rm(CellPop)
+	}
 
 }
 
