@@ -1,5 +1,15 @@
 #!/usr/bin/env Rscript
 
+# Arguments:
+#
+# (1) - mode
+# (2) - number of timesteps
+# (3) - output file name
+# 
+# 'single' mode runs the simulation once for the specified number of timesteps and saves the result
+# 'batch' mode runs the simulation a number of times (see batch section) while varying parameters, and saves results separately
+# 'endless' mode runs the simulation endlessly (until manual termination) and saves the results at each timestep 
+
 #--- Load libraries and necessary data files, and define global variables
 ######################################################################################
 library(data.tree)
@@ -22,6 +32,7 @@ for (i in names(Hsapiens)[1:24]){ # load all chromosome map files
 strdict<-c("+","-")
 names(strdict)<-c(1,2)
 
+args<-commandArgs(trailingOnly=TRUE)
 
 #--- Define functions
 ######################################################################################
@@ -143,11 +154,7 @@ rank_clone <- function(r, anno, sites_chrm, sites_loci, gainp, lossp) {
     }
 
     if (gene_hits > 0 || tsg_hits > 0){
-	            r=r*(lossp^gene_hits)*(gainp^tsg_hits)
-    }
-
-    if (r < 0.25) { # If the division rate is below 0.25, the clone stops growing
-        r<-0
+	    r=r*(lossp^gene_hits)*(gainp^tsg_hits)
     }
 
     return(r)
@@ -220,30 +227,30 @@ update_anno <- function(anno, simout, tes) {
 
 
 # PURPOSE: To call gen_sim.r with some probability (probability of transposition, tp) for a clone at a time step
-#
+
 # INPUT:
 #   node          (data.tree node) current node of the data tree
-#   tnum          (integer) time step number
-#
+#   sd 			  Driver mutation selection strength
+# 	sp 			  Passenger mutation selection strength
+
 # OUTPUT: void
-maybeTranspose <- function(node) {
+maybeTranspose <- function(node, sd, sp) {
     
     if (node$r==0){ # If the division rate of the clone is zero, skip the node
         return()
     }
-    # Update number of cells
+    
     nc <- node$ncells[length(node$ncells)] + round(node$ncells[length(node$ncells)]*node$r)
     # Sample from binomial distribution for number of transpositions
     if (nc < 4.2e9) {ntrans <- rbinom(1,nc,cellP)} # rbinom() fails for large n
     else {ntrans <- nc*cellP} # If n is too large, use the expected number of events (mean of distribution)
-    # Simulate any transpositions
     if (ntrans > 0) {
         simout <- gen_sim(genome,node,ntrans)
         nc <- nc-ntrans
         for (i in 1:ntrans) {
             l<<-l+1
             tmp <- update_anno(exann,lapply(simout,'[',i),node$tes)
-            r_tmp <- rank_clone(node$r, tmp, lapply(simout,'[',i)[[2]], lapply(simout,'[',i)[[3]],1.2,0.8)
+            r_tmp <- rank_clone(node$r, tmp, lapply(simout,'[',i)[[2]], lapply(simout,'[',i)[[3]], sd, sp)
             tmp<-mapply(append, lapply(simout,'[',i), node$tes, SIMPLIFY = FALSE)
             node$AddChild(l, ncells=1, r=r_tmp, tes=tmp)
         }
@@ -254,35 +261,108 @@ maybeTranspose <- function(node) {
 
 #--- Set simulation parameters
 ######################################################################################
-l<-1
-ENifrc<- .1       	# Fraction of endonuclease-independent (random) insertions
-rootNCells <- 1   	# Initial number of cells in root clone
-rootDivRate <- 1  	# Initial division rate
-cellP <- 0.5     	# Probability of transposition / timestep of a single cell
 
-NT <- 5 		# Number of time steps
+ENifrc<- .1       # Fraction of endonuclease-independent (random) insertions
+rootNCells <- 1   # Initial number of cells in root clone
+rootDivRate <- 1  # Initial division rate
+cellP <- 0.2      # Probability of transposition / timestep of a single cell
+
+NT <- args[2]          # Number of time steps
 
 #--- Generate clone tree
 ######################################################################################
 
-CellPop <- Node$new(1)
-CellPop$ncells <- c(rootNCells)
-CellPop$r <- rootDivRate
-CellPop$tes <- list(DNAStringSet(c("TTATTTA")),c("chr1"),c(1001140),c("+"))
-CellPop$r <- rank_clone(CellPop$r, exann, CellPop$tes[[2]], CellPop$tes[[3]])
-CellPop$r
+if (args[1]=='batch') {
+	gainp <- c(1/seq(0.8,0.2,-0.2),12)
+	lossp <- seq(0.8,0.0,-0.2)
+	nrun <- 0
+	for (sdi in 1:5) {
+		for (spi in 1:5) {
+		    l<-1
+		    CellPop <- Node$new(1)
+		    CellPop$ncells <- c(rootNCells)
+		    CellPop$r <- rootDivRate
+		    # CellPop$tes <- list(DNAStringSet(c("TCGA")),c("chr1"),c(1013467),c("+"))
+		    CellPop$tes <- list(DNAStringSet(),c(),c(),c())
+		    # CellPop$r <- rank_clone(CellPop$r, exann, CellPop$tes[[2]], CellPop$tes[[3]], 1.2, 0.8)
+		    # CellPop$r
 
-ptm <- proc.time()
-for (i in 2:NT) {
+		    maybeTranspose <- function(node, sd, sp) {
+			
+			if (is.na(node$r)) {return()}
+		        if (node$r==0){ # If the division rate of the clone is zero, skip the node
+		            return()
+		        }
 
-    CellPop$Do(maybeTranspose)
-               
+		        nc <- node$ncells[length(node$ncells)] + round(node$ncells[length(node$ncells)]*node$r)
+		        # Sample from binomial distribution for number of transpositions
+		        if (nc < 4.2e9) {ntrans <- rbinom(1,nc,cellP)} # rbinom() fails for large n
+		        else {ntrans <- nc*cellP} # If n is too large, use the expected number of events (mean of distribution)
+		        if (ntrans > 0) {
+		            simout <- gen_sim(genome,node,ntrans)
+		            nc <- nc-ntrans
+		            for (i in 1:ntrans) {
+		                l<<-l+1
+		                tmp <- update_anno(exann,lapply(simout,'[',i),node$tes)
+		                r_tmp <- rank_clone(node$r, tmp, lapply(simout,'[',i)[[2]], lapply(simout,'[',i)[[3]],sd,sp)
+		                tmp<-mapply(append, lapply(simout,'[',i), node$tes, SIMPLIFY = FALSE)
+		                node$AddChild(l, ncells=1, r=r_tmp, tes=tmp)
+		            }
+		        }   
+		        node$ncells <- append(node$ncells,nc)
+		    }
+
+		    ptm <- proc.time()
+		    for (n in 2:NT) {
+
+		            CellPop$Do(maybeTranspose,gainp[i],lossp[i])
+
+		    }
+		    print(proc.time() - ptm)
+
+		    save("CellPop",file=paste0(args[3],nrun,".rda"))
+		    rm(CellPop)
+		    nrun <- nrun+1
+
+		}
+
+	}
+} else if (args[1] == 'single') {
+
+	CellPop <- Node$new(1)
+	CellPop$ncells <- c(rootNCells)
+	CellPop$r <- rootDivRate
+	CellPop$tes <- list(DNAStringSet(),c(),c(),c())
+	# CellPop$tes <- list(DNAStringSet(c("TTATTTA")),c("chr1"),c(1001140),c("+"))
+	# CellPop$r <- rank_clone(CellPop$r, exann, CellPop$tes[[2]], CellPop$tes[[3]])
+	# CellPop$r
+
+	ptm <- proc.time()
+	for (i in 2:NT) {
+
+	    CellPop$Do(maybeTranspose,1.25,0.8)
+	               
+	}
+	proc.time() - ptm
+
+	save(CellPop, file=paste0(args[3]))
+
+} else if (args[1] == 'endless') {
+
+	CellPop <- Node$new(1)
+	CellPop$ncells <- c(rootNCells)
+	CellPop$r <- rootDivRate
+
+	while (1) {
+		ptm <- proc.time()
+
+	    	CellPop$Do(maybeTranspose,1.25,0.8)
+		save(CellPop, file=paste0(args[3]))              
+
+		print(proc.time()-ptm)
+
 }
-proc.time() - ptm
-
-# print(CellPop,'ncells')
-
-save(CellPop, file=paste0('../data/L1-cellpop-out.rda'))
+}
 
 
 

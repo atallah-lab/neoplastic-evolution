@@ -36,10 +36,10 @@ L1RankTable$score <- scoreTab[,4]
 L1RankTable$strand <- scoreTab[,5]
 
 tmp <- L1RankTable$score # Get score (bit score) from L1RankTable
-tmp <- tmp[order(-tmp)] # Order by bit score
-#tmp <- tmp[1:41] # Take top 40 as active (Brouha et al.)
 tmp <- (tmp-min(tmp))/(max(tmp)-min(tmp)) # Normalize bit score (0-1)
-tmp <- tmp^5.2 # Scale so that ~84% of transposition probability lies in top 6
-L1RankTable$score <- tmp
+tmp <- tmp^860 # Scale so that ~84% of transposition probability lies in top 6
+L1RankTable$score <- tmp/sum(tmp) # Make proper prob dist
+L1RankTable <- L1RankTable[order(-L1RankTable$score),] # Sort table by score
+
 
 save(L1RankTable,file=args[3])

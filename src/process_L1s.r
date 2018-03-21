@@ -7,10 +7,9 @@
 process_L1s <- function(genome, L1RankTable, trpd, tdpd, copyNum) {
 
 	tmp <- L1RankTable$score # Get score (bit score) from L1RankTable
-	tmp <- tmp[1:41] # Take top 40 as active (Brouha et al.)
 
 	# Sample copyNum L1s from the list (with replacement), based on activity ranking
-	l1indcs <- sample(x=c(1:41), copyNum, replace=TRUE, prob=tmp)
+	l1indcs <- sample(x=c(1:40), copyNum, replace=TRUE, prob=tmp[1:40])
 
 	# Sample copyNum truncation fractions and transduction lengths from their respective 
 	# probability densities trpd, and tdpd
