@@ -45,7 +45,7 @@ Monot et al. studed the relative enrichment of L1 insertion frequencies amongst 
     + 'endless' - run the simulation until manually terminated, saving the results at each timestep
  
 #### L1-cellpop.ipynb
-* Interactive notebook version of the L1-cellpop.r script
+* Notebook version of the L1-cellpop.r script, for development
 
 #### gen-sim.r
 * Script for simulating retrotransposition of L1 elements in a single genome
