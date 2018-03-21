@@ -64,7 +64,6 @@ gen_sim <- function(genome,node,copyNum) {
 #                 cat("\nChromosome: ",chrnm)
 
                 map<-get(paste0(chrnm,"Map"))
-                map<-update_chrom_map(chrnm,map,node$tes[[2]],node$tes[[3]],node$tes[[1]])
                 ict<-map[[2]]
                 icl<-map[[3]]
                 iot<-map[[4]]
@@ -160,71 +159,6 @@ rank_clone <- function(r, anno, sites_chrm, sites_loci, gainp, lossp) {
     return(r)
 }
 
-# PURPOSE: Updates the gene annotation of the clone
-#
-# INPUT:
-#   anno         (data frame) Annotation of genes (i.e. chromosome   start   end)
-#   simout          (list of lists) gen_sim output
-#   tes             (list of lists) Node tes
-#
-# OUTPUT: anno
-update_anno <- function(anno, simout, tes) {
-    
-    tmp = mapply(append, simout, tes, SIMPLIFY = FALSE)
-    for (i in 1:length(tmp[[3]])) {
-        # Shift the start loci of genes with start loci beyond the insertion by the width of the L1
-        anno[anno$chrom==tmp[[2]][i] & anno$start>tmp[[3]][i],]$start <- anno[anno$chrom==tmp[[2]][i] & anno$start>tmp[[3]][i],]$start + width(tmp[[1]][i])  
-        # Shift the end loci of genes with start loci beyond the insertion by the width of the L1
-        anno[anno$chrom==tmp[[2]][i] & anno$start>tmp[[3]][i],]$end <- anno[anno$chrom==tmp[[2]][i] & anno$start>tmp[[3]][i],]$end + width(tmp[[1]][i])  
-        # Shift the end locus of any gene with only end locus beyond the insertion by the width of the L1
-        anno[anno$chrom==tmp[[2]][i] & anno$end>tmp[[3]][i] & anno$start<tmp[[3]][i],]$end <- anno[anno$chrom==tmp[[2]][i] & anno$end>tmp[[3]][i] & anno$start<tmp[[3]][i],]$end + width(tmp[[1]][i])        
-    }
-    return(anno) 
-}
-
-# PURPOSE: To update the insertion site annotation of a chromosome for a clone.
-# The L1 insertions which have occurred in the clone will be accounted for
-#
-# INPUT:
-#   chrnm         (string) chromosome name
-#   chrMap        (list) chromosome annotation
-#   sites_chrm    (numeric vector) chromosomes containing L1 insertions for the clone
-#   sites_loci    (character vector) insertion positions (in the respective chromosome)
-#   l1s           (DNAStringSet) l1 sequences and orientation 
-#
-# OUTPUT: (list) updated chromosome annotation
-update_chrom_map <- function(chrnm,chrMap,sites_chrm,sites_loci,l1s) {
-
-        if (length(which(sites_chrm==chrnm))==0){
-                return(chrMap)
-        }
-
-        ict<-chrMap[[2]]
-        icl<-chrMap[[3]]
-        iot<-chrMap[[4]]
-        iol<-chrMap[[5]]
-        insites<-chrMap[[1]]
-
-        chrloci = sites_loci[sites_chrm==chrnm] # Get the sites where insertions occurred in the chromosome
-        chrl1s = l1s[sites_chrm==chrnm] # Get the L1s elements which were inserted    
-    
-        for (i in 1:length(chrloci)) { # Loop over the simulated insertion sites
-                insites[which(is.na(insites))]<- -1 # Replace NA with -1
-                indx <- insites>chrloci[i] # Get indices of target sites which lie downstream of the site
-                insites[indx] <- insites[indx] + width(chrl1s[i]) # Shift the target sites by the length of the L1
-                l1_map <- mapsequence(chrl1s[i]) # Map target sites in the L1
-                l1_map$insites <- l1_map$insites + chrloci[i] # Convert L1 loci to chromosome loci
-                insites <- rbind(insites,l1_map$insites) # Add target sites within L1 to chrom map
-                ict <- rbind(ict,l1_map$ict)
-                icl <- rbind(icl,l1_map$icl)
-                iot <- rbind(iot,l1_map$iot)
-                iol <- rbind(iol,l1_map$iol)
-        }
-
-        return(list(insites,ict,icl,iot,iol))
-
-}
-
 # PURPOSE: To call gen_sim.r with some probability (probability of transposition, tp) for a clone at a time step
 #
 # INPUT:
@@ -250,8 +184,7 @@ maybeTranspose <- function(node, sd, sp) {
             l<<-l+1
             if (width(simout[[1]][i])>=6000) {clp_tmp <- node$cellP*(1+L1RankTable$score[simout[[5]][i]])} # Transposition P increases with intact L1 insertions    
             else {clp_tmp <- node$cellP}
-            tmp <- update_anno(exann,lapply(simout,'[',i),node$tes)
-            r_tmp <- rank_clone(node$r, tmp, lapply(simout,'[',i)[[2]], lapply(simout,'[',i)[[3]], sd, sp)
+            r_tmp <- rank_clone(node$r, exann, lapply(simout,'[',i)[[2]], lapply(simout,'[',i)[[3]], sd, sp)
             tmp<-mapply(append, lapply(simout,'[',i), node$tes, SIMPLIFY = FALSE)
             node$AddChild(l, cellP=clp_tmp, ncells=1, r=r_tmp, tes=tmp)
         }
