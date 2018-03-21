@@ -8,7 +8,7 @@
 # 
 # 'single' mode runs the simulation once for the specified number of timesteps and saves the result
 # 'batch' mode runs the simulation a number of times (see batch section) while varying parameters, and saves results separately
-# 'endless' mode runs the simulation endlessly (until manual termination) and saves the results at each timestep 
+# 'endless' mode runs the simulation endlessly (until manual termination) and saves the results to the same file after each timestep 
 
 #--- Load libraries and necessary data files, and define global variables
 ######################################################################################
