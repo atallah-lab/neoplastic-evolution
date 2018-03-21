@@ -44,6 +44,9 @@ Monot et al. studed the relative enrichment of L1 insertion frequencies amongst 
     + 'batch' - run the simulation a number of times, each for a number of timesteps (the number of each run is appended to the provided output file name to save each run separately) 
     + 'endless' - run the simulation until manually terminated, saving the results at each timestep
  
+#### L1-cellpop-lite.r
+* A simplified version of L1-cellpop.r in which insertions are always simulated using the reference genome
+
 #### L1-cellpop.ipynb
 * Notebook version of the L1-cellpop.r script, for development
 
