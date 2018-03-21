@@ -39,9 +39,10 @@ Monot et al. studed the relative enrichment of L1 insertion frequencies amongst 
 ```
 ./L1-cellpop.r <mode> <number of timesteps> <output file name>
 ```
+* number of timesteps: at each timestep, the number of cells is updated for each clone based on its division rate, and cells in the population may experience transpositions, creating new clones in the population.
 * mode: 
     + 'single' - run the simulation once for a number of timesteps
-    + 'batch' - run the simulation a number of times, each for a number of timesteps (the number of each run is appended to the provided output file name to save each run separately) 
+    + 'batch' - run the simulation a number of times, each for a number of timesteps (the number of each run is appended to the provided output file name to save each run separately). Parameters are varied for each run as written in the script.
     + 'endless' - run the simulation until manually terminated, saving the results at each timestep
  
 #### L1-cellpop-lite.r
