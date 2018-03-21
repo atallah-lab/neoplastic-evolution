@@ -216,9 +216,9 @@ if (args[1]=='batch') {
 		    CellPop <- Node$new(1)
 		    CellPop$ncells <- c(rootNCells)
 		    CellPop$r <- rootDivRate
-		    # CellPop$tes <- list(DNAStringSet(c("TCGA")),c("chr1"),c(1013467),c("+"))
-		    CellPop$tes <- list(DNAStringSet(),c(),c(),c())
+		    CellPop$tes <- list(DNAStringSet(),c(),c(),c(),c())
             CellPop$cellP <- rootcellP
+            # CellPop$tes <- list(DNAStringSet(c("TCGA")),c("chr1"),c(1013467),c("+"))
 		    # CellPop$r <- rank_clone(CellPop$r, exann, CellPop$tes[[2]], CellPop$tes[[3]], 1.2, 0.8)
 		    # CellPop$r
 
@@ -240,8 +240,7 @@ if (args[1]=='batch') {
                         l<<-l+1
                         if (width(simout[[1]][i])>=6000) {clp_tmp <- node$cellP*(1+L1RankTable$score[simout[[5]][i]])} # Transposition P increases with intact L1 insertions    
                         else {clp_tmp <- node$cellP}
-                        tmp <- update_anno(exann,lapply(simout,'[',i),node$tes)
-                        r_tmp <- rank_clone(node$r, tmp, lapply(simout,'[',i)[[2]], lapply(simout,'[',i)[[3]], sd, sp)
+                        r_tmp <- rank_clone(node$r, exann, lapply(simout,'[',i)[[2]], lapply(simout,'[',i)[[3]], sd, sp)
                         tmp<-mapply(append, lapply(simout,'[',i), node$tes, SIMPLIFY = FALSE)
                         node$AddChild(l, cellP=clp_tmp, ncells=1, r=r_tmp, tes=tmp)
                     }
@@ -265,11 +264,11 @@ if (args[1]=='batch') {
 
 	}
 } else if (args[1] == 'single') {
-
+    l<-1
 	CellPop <- Node$new(1)
 	CellPop$ncells <- c(rootNCells)
 	CellPop$r <- rootDivRate
-	CellPop$tes <- list(DNAStringSet(),c(),c(),c())
+	CellPop$tes <- list(DNAStringSet(),c(),c(),c(),c())
     CellPop$cellP <- rootcellP
 	# CellPop$tes <- list(DNAStringSet(c("TTATTTA")),c("chr1"),c(1001140),c("+"))
 	# CellPop$r <- rank_clone(CellPop$r, exann, CellPop$tes[[2]], CellPop$tes[[3]])
@@ -286,10 +285,11 @@ if (args[1]=='batch') {
 	save(CellPop, file=paste0(args[3]))
 
 } else if (args[1] == 'endless') {
-
+    l<-1
 	CellPop <- Node$new(1)
 	CellPop$ncells <- c(rootNCells)
 	CellPop$r <- rootDivRate
+    CellPop$tes <- list(DNAStringSet(),c(),c(),c(),c())
     CellPop$cellP <- rootcellP
 	while (1) {
 		ptm <- proc.time()

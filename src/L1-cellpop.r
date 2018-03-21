@@ -279,13 +279,13 @@ if (args[1]=='batch') {
 	nrun <- 0
 	for (sdi in 1:5) {
 		for (spi in 1:5) {
-		    l<-1
+		    l<-1 # Clone counter
 		    CellPop <- Node$new(1)
 		    CellPop$ncells <- c(rootNCells)
 		    CellPop$r <- rootDivRate
-		    # CellPop$tes <- list(DNAStringSet(c("TCGA")),c("chr1"),c(1013467),c("+"))
-		    CellPop$tes <- list(DNAStringSet(),c(),c(),c())
+		    CellPop$tes <- list(DNAStringSet(),c(),c(),c(),c())
             CellPop$cellP <- rootCellP
+		    # CellPop$tes <- list(DNAStringSet(c("TCGA")),c("chr1"),c(1013467),c("+"),c(0))
 		    # CellPop$r <- rank_clone(CellPop$r, exann, CellPop$tes[[2]], CellPop$tes[[3]], 1.2, 0.8)
 		    # CellPop$r
 
@@ -333,12 +333,13 @@ if (args[1]=='batch') {
 	}
 } else if (args[1] == 'single') {
 
+    l<-1 # Clone counter
 	CellPop <- Node$new(1)
 	CellPop$ncells <- c(rootNCells)
 	CellPop$r <- rootDivRate
-	CellPop$tes <- list(DNAStringSet(),c(),c(),c())
+	CellPop$tes <- list(DNAStringSet(),c(),c(),c(),c())
     CellPop$cellP <- rootCellP
-	# CellPop$tes <- list(DNAStringSet(c("TTATTTA")),c("chr1"),c(1001140),c("+"))
+	# CellPop$tes <- list(DNAStringSet(c("TTATTTA")),c("chr1"),c(1001140),c("+"),c(0))
 	# CellPop$r <- rank_clone(CellPop$r, exann, CellPop$tes[[2]], CellPop$tes[[3]])
 	# CellPop$r
 
@@ -353,10 +354,11 @@ if (args[1]=='batch') {
 	save(CellPop, file=paste0(args[3]))
 
 } else if (args[1] == 'endless') {
-
+    l<-1 # Clone counter
 	CellPop <- Node$new(1)
 	CellPop$ncells <- c(rootNCells)
 	CellPop$r <- rootDivRate
+    CellPop$tes <- list(DNAStringSet(),c(),c(),c(),c())
     CellPop$cellP <- rootCellP
 
 	while (1) {
