@@ -270,6 +270,7 @@ if (args[1]=='batch') {
 	CellPop$ncells <- c(rootNCells)
 	CellPop$r <- rootDivRate
 	CellPop$tes <- list(DNAStringSet(),c(),c(),c())
+    CellPop$cellP <- rootcellP
 	# CellPop$tes <- list(DNAStringSet(c("TTATTTA")),c("chr1"),c(1001140),c("+"))
 	# CellPop$r <- rank_clone(CellPop$r, exann, CellPop$tes[[2]], CellPop$tes[[3]])
 	# CellPop$r
@@ -289,7 +290,7 @@ if (args[1]=='batch') {
 	CellPop <- Node$new(1)
 	CellPop$ncells <- c(rootNCells)
 	CellPop$r <- rootDivRate
-
+    CellPop$cellP <- rootcellP
 	while (1) {
 		ptm <- proc.time()
 
