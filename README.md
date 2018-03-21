@@ -36,7 +36,14 @@ Monot et al. studed the relative enrichment of L1 insertion frequencies amongst 
 
 #### L1-cellpop.r
 * Script for simulating evolution of a cell population, incorporating L1 retrotransposition events and response to mutations
-
+```
+./L1-cellpop.r <mode> <number of timesteps> <output file name>
+```
+* mode: 
+    + 'single' - run the simulation once for a number of timesteps
+    + 'batch' - run the simulation a number of times, each for a number of timesteps (the number of each run is appended to the provided output file name to save each run separately) 
+    + 'endless' - run the simulation until manually terminated, saving the results at each timestep
+ 
 #### L1-cellpop.ipynb
 * Interactive notebook version of the L1-cellpop.r script
 
