@@ -319,7 +319,7 @@ if (args[1]=='batch') {
 		    ptm <- proc.time()
 		    for (n in 2:NT) {
 
-		            CellPop$Do(maybeTranspose,sd[i],sp[i])
+		            CellPop$Do(maybeTranspose,sd[sdi],sp[spi])
 
 		    }
 		    print(proc.time() - ptm)
