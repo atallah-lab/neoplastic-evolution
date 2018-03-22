@@ -305,7 +305,7 @@ if (args[1]=='batch') {
                     nc <- nc-ntrans
                     for (i in 1:ntrans) {
                         l<<-l+1
-                        if (width(simout[[1]][i])>=6000) {clp_tmp <- node$cellP*(1+L1RankTable$score[simout[[5]][i]])} # Transposition P increases with intact L1 insertions    
+                        if (width(simout[[1]][i])>=6000) {clp_tmp <- min(node$cellP+rootCellP*L1RankTable$score[simout[[5]][i]], 1)} # Transposition P increases with intact L1 insertions    
                         else {clp_tmp <- node$cellP}
                         tmp <- update_anno(exann,lapply(simout,'[',i),node$tes)
                         r_tmp <- rank_clone(node$r, tmp, lapply(simout,'[',i)[[2]], lapply(simout,'[',i)[[3]], sd, sp)
