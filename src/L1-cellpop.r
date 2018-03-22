@@ -238,7 +238,7 @@ maybeTranspose <- function(node, sd, sp) {
     }
     
     # increase the number of cells by the existing number * the division rate factor
-    nc <- node$ncells[length(node$ncells)] + round(node$ncells[length(node$ncells)]*node$r)
+    nc <- node$ncells[length(node$ncells)] + ceiling(node$ncells[length(node$ncells)]*node$r)
     
     # sample from binomial distribution for number of transpositions
     if (nc < 4.2e9) {ntrans <- rbinom(1,nc,node$cellP)} # rbinom() fails for large n
@@ -248,7 +248,7 @@ maybeTranspose <- function(node, sd, sp) {
         nc <- nc-ntrans
         for (i in 1:ntrans) {
             l<<-l+1
-            if (width(simout[[1]][i])>=6000) {clp_tmp <- node$cellP*(1+L1RankTable$score[simout[[5]][i]])} # Transposition P increases with intact L1 insertions    
+            if (width(simout[[1]][i])>=6000) {clp_tmp <- min(node$cellP+rootCellP*L1RankTable$score[simout[[5]][i]], 1)} # Transposition P increases with intact L1 insertions    
             else {clp_tmp <- node$cellP}
             tmp <- update_anno(exann,lapply(simout,'[',i),node$tes)
             r_tmp <- rank_clone(node$r, tmp, lapply(simout,'[',i)[[2]], lapply(simout,'[',i)[[3]], sd, sp)
