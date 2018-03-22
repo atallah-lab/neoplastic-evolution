@@ -199,7 +199,7 @@ maybeTranspose <- function(node, sd, sp) {
 ENifrc<- .1       # Fraction of endonuclease-independent (random) insertions
 rootNCells <- 1   # Initial number of cells in root clone
 rootDivRate <- 1  # Initial division rate
-rootcellP <- 0.2  # Probability of transposition / timestep of a single cell
+rootCellP <- 0.2  # Probability of transposition / timestep of a single cell
 
 NT <- args[2]     # Number of time steps
 
@@ -217,7 +217,7 @@ if (args[1]=='batch') {
 		    CellPop$ncells <- c(rootNCells)
 		    CellPop$r <- rootDivRate
 		    CellPop$tes <- list(DNAStringSet(),c(),c(),c(),c())
-            CellPop$cellP <- rootcellP
+            CellPop$cellP <- rootCellP
             # CellPop$tes <- list(DNAStringSet(c("TCGA")),c("chr1"),c(1013467),c("+"))
 		    # CellPop$r <- rank_clone(CellPop$r, exann, CellPop$tes[[2]], CellPop$tes[[3]], 1.2, 0.8)
 		    # CellPop$r
@@ -269,7 +269,7 @@ if (args[1]=='batch') {
 	CellPop$ncells <- c(rootNCells)
 	CellPop$r <- rootDivRate
 	CellPop$tes <- list(DNAStringSet(),c(),c(),c(),c())
-    CellPop$cellP <- rootcellP
+    CellPop$cellP <- rootCellP
 	# CellPop$tes <- list(DNAStringSet(c("TTATTTA")),c("chr1"),c(1001140),c("+"))
 	# CellPop$r <- rank_clone(CellPop$r, exann, CellPop$tes[[2]], CellPop$tes[[3]])
 	# CellPop$r
@@ -290,7 +290,7 @@ if (args[1]=='batch') {
 	CellPop$ncells <- c(rootNCells)
 	CellPop$r <- rootDivRate
     CellPop$tes <- list(DNAStringSet(),c(),c(),c(),c())
-    CellPop$cellP <- rootcellP
+    CellPop$cellP <- rootCellP
 	while (1) {
 		ptm <- proc.time()
 
