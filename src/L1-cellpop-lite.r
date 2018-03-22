@@ -222,32 +222,6 @@ if (args[1]=='batch') {
 		    # CellPop$r <- rank_clone(CellPop$r, exann, CellPop$tes[[2]], CellPop$tes[[3]], 1.2, 0.8)
 		    # CellPop$r
 
-		    maybeTranspose <- function(node, sd, sp) {
-                if (node$r==0){ # if the division rate of the clone is zero, skip the node
-                    return()
-                }
-
-                # increase the number of cells by the existing number * the division rate factor
-                nc <- node$ncells[length(node$ncells)] + round(node$ncells[length(node$ncells)]*node$r)
-
-                # sample from binomial distribution for number of transpositions
-                if (nc < 4.2e9) {ntrans <- rbinom(1,nc,node$cellP)} # rbinom() fails for large n
-                else {ntrans <- nc*node$cellP} # If n is too large, use the expected number of events (mean of distribution)
-                if (ntrans > 0) {
-                    simout <- gen_sim(genome,node,ntrans)
-                    nc <- nc-ntrans
-                    for (i in 1:ntrans) {
-                        l<<-l+1
-                        if (width(simout[[1]][i])>=6000) {clp_tmp <- min(node$cellP+rootCellP*L1RankTable$score[simout[[5]][i]], 1)} # Transposition P increases with intact L1 insertions    
-                        else {clp_tmp <- node$cellP}
-                        r_tmp <- rank_clone(node$r, exann, lapply(simout,'[',i)[[2]], lapply(simout,'[',i)[[3]], sd, sp)
-                        tmp<-mapply(append, lapply(simout,'[',i), node$tes, SIMPLIFY = FALSE)
-                        node$AddChild(l, cellP=clp_tmp, ncells=1, r=r_tmp, tes=tmp)
-                    }
-                }   
-                node$ncells <- append(node$ncells,nc)
-            }
-
 		    ptm <- proc.time()
 		    for (n in 2:NT) {
 
