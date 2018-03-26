@@ -96,12 +96,6 @@ developing the genome-level retrotransposition model.
 #### process_L1s.r
 * Function to simulate truncation and transduction of L1 elements selected for retrotransposition based on activity ranking.
 
-#### exchk.r
-* Example of function for checking whether a given breakpoint lies inside an exon
-* Dependencies: R(>= 3.0.0, Packages - data.table), filtgff3.bash
-```
-./exchk.r <input gff3> <chromosome name (e.g. X)> <breakpoint location>
-```
 #### gcbasedins.r
 * Insert L1 element copies in a given chromosome with probability based on local G/C content.
 * Dependencies: R(>= 2.8.0, Packages - Biostrings, BSgenome (for default hg38))
