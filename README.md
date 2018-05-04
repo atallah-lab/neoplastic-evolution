@@ -44,18 +44,9 @@ Monot et al. studed the relative enrichment of L1 insertion frequencies amongst 
     + 'single' - run the simulation once for a number of timesteps
     + 'batch' - run the simulation a number of times, each for a number of timesteps (the number of each run is appended to the provided output file name to save each run separately). Parameters are varied for each run as written in the script.
     + 'endless' - run the simulation until manually terminated, saving the results at each timestep
- 
-#### L1-cellpop-lite.r
-* A simplified version of L1-cellpop.r in which insertions are always simulated using the reference genome
 
 #### L1-cellpop.ipynb
 * Notebook version of the L1-cellpop.r script, for development
-
-#### L1-cellpop-lite.ipynb
-* Notebook version of the L1-cellpop-lite.r script
-
-#### save_chrom_site_class_dists.ipynb
-* The notebook used to generate the file ./data/chromSitesPd.rda, which contains the probability of insertion distributions for the various snap-velcro categories for each chromosome of hg38
 
 #### gen-sim.r
 * Script for simulating retrotransposition of L1 elements in a single genome
@@ -69,7 +60,6 @@ Monot et al. studed the relative enrichment of L1 insertion frequencies amongst 
 ```
 ./gen-sim.r <copy number>
 ```
-
 #### gen-sim-notebook.ipynb
 * This is a highly commented, notebook version of the site-generation part of gen-sim.r meant for learning and
 developing the genome-level retrotransposition model.
@@ -92,8 +82,11 @@ developing the genome-level retrotransposition model.
 #### mapsequence.r
 * Function to map potential L1 insertion sites within a provided DNAString object
 
-#### get_sv_dist.r
-* Stores the counts of each EN site category for each chromosome in a 24 x 4 matrix.
+#### get_chrom_sv_dists.r
+* Stores the counts of each EN site category for each chromosome in a 24 x 4 matrix, as well as their probabilities.
+
+#### save_chrom_site_class_dists.ipynb
+* The notebook used to generate the file ./data/chromSitesPd.rda, which contains the probability of insertion distributions for the various snap-velcro categories for each chromosome of hg38. This is similar to the above script, except it adds endonuclease-independent insertions as a class and accounts for their probability (assumed 0.1 in the script).
 
 #### hgextract.r
 * Extracts segments from a genome in ranges provided in a tab-delimited text file, and outputs the results to a Fasta file.
@@ -110,7 +103,6 @@ developing the genome-level retrotransposition model.
 ```
 ./gcbasedins.r <optional: input genome (fasta, default - hg19)> <output file name (fasta)>
 ```
-
 #### map_L1_consensus_sequences_hg38.R
 * Map an arbitrary set of L1 consensus sequences against hg38. 
 
@@ -133,6 +125,9 @@ developing the genome-level retrotransposition model.
 
 #### ./data/chrmpd.rda
 * R data file containing two objects: chrmcnt - number of sites for each of the 4 snap-velcro categories for each chromosome, chrmpd - probability of insertion for each of the 4 categories for each chromosome
+
+#### ./data/chromSitePd.rda
+* R data file containing a 24x5 matrix with probabilities of selection for each insertion site class, including 0.1 probability of endonuclease-independent insertions
 
 #### ./data/GenBank_L19092.fa 
 * consensus sequence retrieved from GenBank, https://www.ncbi.nlm.nih.gov/nuccore/L19092.1?report=GenBank
