@@ -10,7 +10,7 @@
 #
 # It writes the extractions to a Fasta file, with each sequence numbered.
 #
-# Usage: ./hgextract.r <...> <...>
+# Usage: ./hgextract.r <inFile> <outFile>
 # Output: <...>
 #
 # Dependencies: R(>= 2.8.0, Packages - Biostrings, BSgenome (for default hg38), 
@@ -25,10 +25,10 @@ library(BSgenome.Hsapiens.UCSC.hg38)
 args = commandArgs(trailingOnly=TRUE)
 
 if (length(args) <2) {
-message("Usage: ./hgextract.r <> <>")
+message("Usage: ./hgextract.r <inFile> <outFile>")
 stop("Please provide input and output file names.")
 } else if (length(args)>2) {
-message("Usage: ./hgextract.r <> <>")
+message("Usage: ./hgextract.r <inFile> <outFile>")
 message("Only first two arguments used.")
 }
 tmp<-read.table(args[1])
