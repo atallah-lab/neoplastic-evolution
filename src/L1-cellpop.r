@@ -210,7 +210,7 @@ maybeTranspose <- function(node, sd, sp) {
 ENifrc<- .1       # Fraction of endonuclease-independent (random) insertions
 N0 <- 1           # Initial number of cells in root clone
 B0 <- 1           # Initial division rate
-mu <- 1        	  # Probability of transposition / timestep of a single cell
+mu <- 0.2         # Probability of transposition / timestep of a single cell
 
 NT <- args[2]     # Number of time steps
 
@@ -221,8 +221,7 @@ N <- N0 # total population size
 gn <- c() # list of genes hit
 
 if (args[1]=='batch') {
-    sd <- c(1/seq(1.0,0.2,-0.2))
-    sp <- seq(1.0,0.2,-0.2)
+    sv <- c(0.000, 0.001, 0.010, 0.100, 1.000)
 	nrun <- 0
 	for (sdi in 1:5) {
 		for (spi in 1:5) {
@@ -239,7 +238,7 @@ if (args[1]=='batch') {
 #             CellPop$tes <- list(c("chr1","chr1"),c(11874,11149270),c("+","+"),c(0,0))
 
             # update attributes based on initialized insertions
-            tmp <- count_hits(CellPop, exann, CellPop$tes[[1]], CellPop$tes[[2]], 0.1, 0.001)
+            tmp <- count_hits(CellPop, exann, CellPop$tes[[1]], CellPop$tes[[2]], 0.000, 0.000)
             CellPop$B <- tmp[[1]]
             CellPop$np <- tmp[[2]]
             CellPop$nd <- tmp[[3]]
@@ -250,7 +249,7 @@ if (args[1]=='batch') {
 		    for (n in 2:NT) {
 
             t <- Traverse(CellPop,traversal='pre-order',filterFun=function(x) tail(x$ncells,n=1) > 0)    
-            lapply(t,maybeTranspose,sd[sdi],sp[spi])
+            lapply(t,maybeTranspose,sv[sdi],sv[spi])
 
             N <- append(N,sum(vapply(CellPop$Get('ncells'),tail,n=1L,FUN.VALUE = numeric(1))))
 
