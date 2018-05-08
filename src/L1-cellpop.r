@@ -217,9 +217,6 @@ NT <- args[2]     # Number of time steps
 #--- Generate clone tree
 ######################################################################################
 
-N <- N0 # total population size
-gn <- c() # list of genes hit
-
 if (args[1]=='batch') {
     sv <- c(0.000, 0.001, 0.010, 0.100, 1.000) # array of selection strengths over 4 orders of magnitude
 	nrun <- 0
@@ -227,6 +224,9 @@ if (args[1]=='batch') {
 		for (spi in 1:5) {
 			
 		    l<-1 # Clone counter
+		    N <- N0 # total population size
+			gn <- c() # list of genes hit
+
 		    CellPop <- Node$new(1)
             CellPop$ncells <- c(N0) # Set initial number of cells of clone
             CellPop$B <- B0 # Set initial birth rate of clone
@@ -251,7 +251,7 @@ if (args[1]=='batch') {
             t <- Traverse(CellPop,traversal='pre-order',filterFun=function(x) tail(x$ncells,n=1) > 0)    
             lapply(t,maybeTranspose,sv[sdi],sv[spi])
 
-            N <- append(N,sum(vapply(CellPop$Get('ncells'),tail,n=1L,FUN.VALUE = numeric(1))))
+            N <<- append(N,sum(vapply(CellPop$Get('ncells'),tail,n=1L,FUN.VALUE = numeric(1))))
 
 		    }
 		    print(proc.time() - ptm)
@@ -266,6 +266,9 @@ if (args[1]=='batch') {
 } else if (args[1] == 'single') {
 
     l<-1 # Clone counter
+	N <- N0 # total population size
+	gn <- c() # list of genes hit
+
 	CellPop <- Node$new(1) # Initialize data.tree as single node
     CellPop$ncells <- c(N0) # Set initial number of cells of clone
     CellPop$B <- B0 # Set initial birth rate of clone
@@ -290,7 +293,7 @@ if (args[1]=='batch') {
         t <- Traverse(CellPop,traversal='pre-order',filterFun=function(x) tail(x$ncells,n=1) > 0)    
         lapply(t,maybeTranspose,0.1,0.001)
 
-        N <- append(N,sum(vapply(CellPop$Get('ncells'),tail,n=1L,FUN.VALUE = numeric(1))))             
+        N <<- append(N,sum(vapply(CellPop$Get('ncells'),tail,n=1L,FUN.VALUE = numeric(1))))             
 	}
 	proc.time() - ptm
 
@@ -299,6 +302,9 @@ if (args[1]=='batch') {
 } else if (args[1] == 'endless') {
     
     l<-1 # Clone counter
+	N <- N0 # total population size
+	gn <- c() # list of genes hit
+
 	CellPop <- Node$new(1) # Initialize data.tree as single node
     CellPop$ncells <- c(N0) # Set initial number of cells of clone
     CellPop$B <- B0 # Set initial birth rate of clone
@@ -323,7 +329,7 @@ if (args[1]=='batch') {
         t <- Traverse(CellPop,traversal='pre-order',filterFun=function(x) tail(x$ncells,n=1) > 0)    
         lapply(t,maybeTranspose,0.1,0.001)
 
-        N <- append(N,sum(vapply(CellPop$Get('ncells'),tail,n=1L,FUN.VALUE = numeric(1))))   
+        N <<- append(N,sum(vapply(CellPop$Get('ncells'),tail,n=1L,FUN.VALUE = numeric(1))))   
             
 		save(CellPop,N,gn, file=paste0(args[3]))              
 
