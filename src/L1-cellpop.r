@@ -23,7 +23,8 @@ load('../data/chromSitePd.rda')
 trpd <- read.table("../data/L1truncpd.csv",sep=",")
 tdpd <- read.table("../data/L1transdpd.csv",sep=",")
 for (i in names(Hsapiens)[1:24]){ # load all chromosome map files
-        load(paste0("../data/root_maps/",i,".rda"))
+        cat(paste0('Loading...',i,'\n'))
+        load(paste0('../data/root_maps/',i,'.rda'))
 }
 strdict<-c("+","-")
 names(strdict)<-c(1,2)
@@ -38,7 +39,9 @@ args<-commandArgs(trailingOnly=TRUE)
 # INPUT:
 #   copyNum       (integer) number of L1 insertions to simulate
 #
-# OUTPUT:         (list) loci of insertions, indices of inserted L1s from L1RankTable,
+# OUTPUT:         (list) loci of insertions, indices of inserted L1s from L1RankTable
+# 
+# Note: See gen-sim-notebook.ipynb for a more highly commented version
 gen_sim <- function(copyNum) {
 
         sites_loci<-c() # Initialize arrays for storing simulated ins. site data
@@ -129,9 +132,9 @@ gen_sim <- function(copyNum) {
 #   genes         (list of strings) list of symbols of affected genes
 count_hits <- function(node, anno, sites_chrm, sites_loci, sd, sp) {
 
-    np=0; # set counter to zero
-    nd=0;
-    genes=c();
+    np<-0; # set counters to zero
+    nd<-0;
+    genes <- c()
     
     for (i in 1:length(unique(sites_chrm))) { # loop over chromosomes inserted into
         
@@ -143,29 +146,32 @@ count_hits <- function(node, anno, sites_chrm, sites_loci, sd, sp) {
         ins <- unlist(lapply(ins,which))
         
         if (length(ins)>0) {
-            genes <- append(genes,tmp$geneSym[ins])
-            np = np+length(which(tmp$istsg[ins]==0)) # count the number of non-tsg insertions
-            nd = nd+length(which(tmp$istsg[ins]==1)) # count the number of tsg insertions
+            genes <- rbind(genes,data.table(sym=tmp$geneSym[ins],tsg=tmp$istsg[ins]))
+            np <- np+length(which(tmp$istsg[ins]==0)) # count the number of non-tsg insertions
+            nd <- nd+length(which(tmp$istsg[ins]==1)) # count the number of tsg insertions
         } else {
             np <- 0
             nd <- 0
         }
 
     }
-
-    b <- ((1+sd)^(node$nd+nd))/((1+sp)^(node$np+np)) # Calculate birth rate of clone
+    if (np > 0 || nd > 0) {
+        b <- ((1+sd)^(node$nd+nd))/((1+sp)^(node$np+np)) # Calculate birth rate of clone
+    } else {
+        b <- node$B
+    }
 
     return(list(b, np, nd, genes))
 }
 
 
 
-# PURPOSE: To call gen_sim.r with some probability (probability of transposition, tp) for a clone at a time step
+# PURPOSE: To call gen_sim.r with some probability (probability of transposition, mu) for a clone at a time step
 #
 # INPUT:
 #   node        (data.tree node) current node of the data tree
-#   sp          passenger mutation selection coefficient (<1)
-#   sd          driver mutation selection coefficient (>1)
+#   sp          passenger mutation selection coefficient
+#   sd          driver mutation selection coefficient
 #
 # OUTPUT: void
 maybeTranspose <- function(node, sd, sp) {
@@ -175,7 +181,7 @@ maybeTranspose <- function(node, sd, sp) {
     }
     
     # increase the number of cells by the existing number * the birth rate factor
-    nc <- node$ncells[length(node$ncells)] + round(node$ncells[length(node$ncells)]*node$B)
+    nc <- tail(node$ncells,n=1) + round(tail(node$ncells,n=1)*node$B)
     
     # sample from binomial distribution for number of transpositions
     if (nc < 4.2e9) {ntrans <- rbinom(1,nc,mu)} # rbinom() fails for large n
@@ -183,13 +189,14 @@ maybeTranspose <- function(node, sd, sp) {
     if (ntrans > 0) {
         simout <- gen_sim(ntrans)
         nc <- nc-ntrans
-        for (i in 1:ntrans) {
+        for (i in 1:ntrans) { #### possible bottleneck
             l<<-l+1
             # determine birth rate, number of driver/passenger mutations, and affected genes of new clone
             tmp1 <- count_hits(node, exann, lapply(simout,'[',i)[[1]], lapply(simout,'[',i)[[2]], sd, sp)
             # determine the loci/L1s of insertions in the new clone
             tmp2 <- mapply(append, lapply(simout,'[',i), node$tes, SIMPLIFY = FALSE)
-            node$AddChild(l, ncells=1, B=tmp1[[1]], nd=node$nd+tmp1[[3]], np=node$np+tmp1[[2]], genes=append(node$genes,tmp1[[4]]), tes=tmp2)
+            node$AddChild(l, ncells=1, B=tmp1[[1]], nd=node$nd+tmp1[[3]], np=node$np+tmp1[[2]], genes=rbind(node$genes,tmp1[[4]]), tes=tmp2)
+            gn <<- rbind(gn,tmp1[[4]]) # append hit genes to list
         }
     }   
     node$ncells <- append(node$ncells,nc)
@@ -210,6 +217,9 @@ NT <- args[2]     # Number of time steps
 #--- Generate clone tree
 ######################################################################################
 
+N <- N0 # total population size
+gn <- c() # list of genes hit
+
 if (args[1]=='batch') {
     sd <- c(1/seq(1.0,0.2,-0.2))
     sp <- seq(1.0,0.2,-0.2)
@@ -219,33 +229,36 @@ if (args[1]=='batch') {
 			
 		    l<-1 # Clone counter
 		    CellPop <- Node$new(1)
-			CellPop$ncells <- c(N0) # Set initial number of cells of clone
-			CellPop$B <- B0 # Set initial birth rate of clone
-			CellPop$np <- 0 # Set initial number of drivier mutations
-			CellPop$nd <- 0 # Set initial number of passenger mutations
-			CellPop$genes <- c()		    
-			# Set the L1 insertions existing in root node
-			CellPop$tes <- list(c(),c(),c(),c())
-			# CellPop$tes <- list(c("chr1"),c(69091),c("+"),c(0))
-			# CellPop$tes <- list(c("chr1","chr1"),c(11874,69091),c("+","+"),c(0,0))
-		    # update attributes based on initialized insertions
-			tmp <- count_hits(CellPop, exann, CellPop$tes[[1]], CellPop$tes[[2]], 0.1, 0.001)
-			CellPop$B <- tmp[[1]]
-			CellPop$np <- c(tmp[[2]])
-			CellPop$nd <- c(tmp[[3]])
-			CellPop$genes <- c(tmp[[4]])
+            CellPop$ncells <- c(N0) # Set initial number of cells of clone
+            CellPop$B <- B0 # Set initial birth rate of clone
+            CellPop$np <- 0 # Set initial number of drivier mutations
+            CellPop$nd <- 0 # Set initial number of passenger mutations
+            CellPop$genes <- c()
+            # Set the L1 insertions existing in root node
+            CellPop$tes <- list(c(),c(),c(),c())
+#             CellPop$tes <- list(c("chr1","chr1"),c(11874,11149270),c("+","+"),c(0,0))
+
+            # update attributes based on initialized insertions
+            tmp <- count_hits(CellPop, exann, CellPop$tes[[1]], CellPop$tes[[2]], 0.1, 0.001)
+            CellPop$B <- tmp[[1]]
+            CellPop$np <- tmp[[2]]
+            CellPop$nd <- tmp[[3]]
+            CellPop$genes <- tmp[[4]]
+            gn <- tmp[[4]] # list of genes hit
 
 		    ptm <- proc.time()
 		    for (n in 2:NT) {
 
-				    t <- Traverse(CellPop,traversal='pre-order')
-				    lapply(t,maybeTranspose,sd[sdi],sp[spi])
+            t <- Traverse(CellPop,traversal='pre-order',filterFun=function(x) tail(x$ncells,n=1) > 0)    
+            lapply(t,maybeTranspose,sd[sdi],sp[spi])
+
+            N <- append(N,sum(vapply(CellPop$Get('ncells'),tail,n=1L,FUN.VALUE = numeric(1))))
 
 		    }
 		    print(proc.time() - ptm)
 
-		    save("CellPop",file=paste0(args[3],nrun,".rda"))
-		    rm(CellPop)
+		    save(CellPop,N,gn,file=paste0(args[3],nrun,".rda"))
+		    rm(CellPop,N,gn)
 		    nrun <- nrun+1
 
 		}
@@ -255,58 +268,65 @@ if (args[1]=='batch') {
 
     l<-1 # Clone counter
 	CellPop <- Node$new(1) # Initialize data.tree as single node
-	CellPop$ncells <- c(N0) # Set initial number of cells of clone
-	CellPop$B <- B0 # Set initial birth rate of clone
-	CellPop$np <- 0 # Set initial number of drivier mutations
-	CellPop$nd <- 0 # Set initial number of passenger mutations
-	CellPop$genes <- c()
-	# Set the L1 insertions existing in root node
-	CellPop$tes <- list(c(),c(),c(),c())
-	# CellPop$tes <- list(c("chr1"),c(69091),c("+"),c(0))
-	# CellPop$tes <- list(c("chr1","chr1"),c(11874,69091),c("+","+"),c(0,0))
-	# update attributes based on initialized insertions
-	tmp <- count_hits(CellPop, exann, CellPop$tes[[1]], CellPop$tes[[2]], 0.1, 0.001)
-	CellPop$B <- tmp[[1]]
-	CellPop$np <- c(tmp[[2]])
-	CellPop$nd <- c(tmp[[3]])
-	CellPop$genes <- c(tmp[[4]])
+    CellPop$ncells <- c(N0) # Set initial number of cells of clone
+    CellPop$B <- B0 # Set initial birth rate of clone
+    CellPop$np <- 0 # Set initial number of drivier mutations
+    CellPop$nd <- 0 # Set initial number of passenger mutations
+    CellPop$genes <- c()
+    # Set the L1 insertions existing in root node
+    CellPop$tes <- list(c(),c(),c(),c())
+#     CellPop$tes <- list(c("chr1","chr1"),c(11874,11149270),c("+","+"),c(0,0))
+
+    # update attributes based on initialized insertions
+    tmp <- count_hits(CellPop, exann, CellPop$tes[[1]], CellPop$tes[[2]], 0.1, 0.001)
+    CellPop$B <- tmp[[1]]
+    CellPop$np <- tmp[[2]]
+    CellPop$nd <- tmp[[3]]
+    CellPop$genes <- tmp[[4]]
+    gn <- tmp[[4]] # list of genes hit
 
 	ptm <- proc.time()
 	for (i in 2:NT) {
 
-	    t <- Traverse(CellPop,traversal='pre-order')
-	    lapply(t,maybeTranspose,0.1,0.001)	               
+        t <- Traverse(CellPop,traversal='pre-order',filterFun=function(x) tail(x$ncells,n=1) > 0)    
+        lapply(t,maybeTranspose,0.1,0.001)
+
+        N <- append(N,sum(vapply(CellPop$Get('ncells'),tail,n=1L,FUN.VALUE = numeric(1))))             
 	}
 	proc.time() - ptm
 
-	save(CellPop, file=paste0(args[3]))
+	save(CellPop,N,gn, file=paste0(args[3]))
 
 } else if (args[1] == 'endless') {
     
     l<-1 # Clone counter
 	CellPop <- Node$new(1) # Initialize data.tree as single node
-	CellPop$ncells <- c(N0) # Set initial number of cells of clone
-	CellPop$B <- B0 # Set initial birth rate of clone
-	CellPop$np <- 0 # Set initial number of drivier mutations
-	CellPop$nd <- 0 # Set initial number of passenger mutations
-	CellPop$genes <- c()
-	# Set the L1 insertions existing in root node
-	CellPop$tes <- list(c(),c(),c(),c())
-	# CellPop$tes <- list(c("chr1"),c(69091),c("+"),c(0))
-	# CellPop$tes <- list(c("chr1","chr1"),c(11874,69091),c("+","+"),c(0,0))
-	# update attributes based on initialized insertions
-	tmp <- count_hits(CellPop, exann, CellPop$tes[[1]], CellPop$tes[[2]], 0.1, 0.001)
-	CellPop$B <- tmp[[1]]
-	CellPop$np <- c(tmp[[2]])
-	CellPop$nd <- c(tmp[[3]])
-	CellPop$genes <- c(tmp[[4]])
+    CellPop$ncells <- c(N0) # Set initial number of cells of clone
+    CellPop$B <- B0 # Set initial birth rate of clone
+    CellPop$np <- 0 # Set initial number of drivier mutations
+    CellPop$nd <- 0 # Set initial number of passenger mutations
+    CellPop$genes <- c()
+    # Set the L1 insertions existing in root node
+    CellPop$tes <- list(c(),c(),c(),c())
+#     CellPop$tes <- list(c("chr1","chr1"),c(11874,11149270),c("+","+"),c(0,0))
+
+    # update attributes based on initialized insertions
+    tmp <- count_hits(CellPop, exann, CellPop$tes[[1]], CellPop$tes[[2]], 0.1, 0.001)
+    CellPop$B <- tmp[[1]]
+    CellPop$np <- tmp[[2]]
+    CellPop$nd <- tmp[[3]]
+    CellPop$genes <- tmp[[4]]
+    gn <- tmp[[4]] # list of genes hit
 
 	while (1) {
 		ptm <- proc.time()
 
-	    t <- Traverse(CellPop,traversal='pre-order')
-	    lapply(t,maybeTranspose,0.1,0.001)	
-		save(CellPop, file=paste0(args[3]))              
+        t <- Traverse(CellPop,traversal='pre-order',filterFun=function(x) tail(x$ncells,n=1) > 0)    
+        lapply(t,maybeTranspose,0.1,0.001)
+
+        N <- append(N,sum(vapply(CellPop$Get('ncells'),tail,n=1L,FUN.VALUE = numeric(1))))   
+            
+		save(CellPop,N,gn, file=paste0(args[3]))              
 
 		print(proc.time()-ptm)
 
