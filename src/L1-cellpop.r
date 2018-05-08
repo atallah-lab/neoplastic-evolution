@@ -10,7 +10,7 @@
 # 'batch' runs the simulation a number of times (see batch section) while varying parameters, and saves results separately
 # 'endless' runs the simulation endlessly (until manual termination) and saves the results to the same file after each timestep 
 
-#--- Load libraries and necessary data files, and define global variables
+#--- Load libraries and necessary data files
 ######################################################################################
 library(data.tree)
 library(data.table)
@@ -221,7 +221,7 @@ N <- N0 # total population size
 gn <- c() # list of genes hit
 
 if (args[1]=='batch') {
-    sv <- c(0.000, 0.001, 0.010, 0.100, 1.000)
+    sv <- c(0.000, 0.001, 0.010, 0.100, 1.000) # array of selection strengths over 4 orders of magnitude
 	nrun <- 0
 	for (sdi in 1:5) {
 		for (spi in 1:5) {
