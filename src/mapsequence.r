@@ -56,18 +56,18 @@ mapsequence <- function(seq) {
 	n <- max(length(ict_s), length(ict_ns))
 	length(ict_s) <- n                      
 	length(ict_ns) <- n
-        n <- max(length(icl_s), length(icl_ns))
+    n <- max(length(icl_s), length(icl_ns))
 	length(icl_s) <- n
-        length(icl_ns) <- n
-        n <- max(length(iot_s), length(iot_ns))
-        length(iot_s) <- n
-        length(iot_ns) <- n
-        n <- max(length(iol_s), length(iol_ns))
-        length(iol_s) <- n
-        length(iol_ns) <- n	
-        n <- max(length(insites_s), length(insites_ns))
-        length(insites_s) <- n
-        length(insites_ns) <- n
+    length(icl_ns) <- n
+    n <- max(length(iot_s), length(iot_ns))
+    length(iot_s) <- n
+    length(iot_ns) <- n
+    n <- max(length(iol_s), length(iol_ns))
+    length(iol_s) <- n
+    length(iol_ns) <- n	
+    n <- max(length(insites_s), length(insites_ns))
+    length(insites_s) <- n
+    length(insites_ns) <- n
 
 	# Bind the arrays as columns
 	ict<-cbind(ict_s,ict_ns)
