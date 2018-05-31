@@ -45,8 +45,18 @@ Monot et al. studed the relative enrichment of L1 insertion frequencies amongst 
     + 'batch' - run the simulation a number of times, each for a number of timesteps (the number of each run is appended to the provided output file name to save each run separately). Parameters are varied for each run as written in the script.
     + 'endless' - run the simulation until manually terminated, saving the results at each timestep
 
+#### L1-cellpop-lite.r
+* A simplified version of L1-cellpop.r, in which mutation effects are determined via probabilistic sampling
+* The probabilities of three mutation types: passenger, driver, and null, were determined using the notebook: https://github.com/atallah-lab/analyses/blob/master/mutation_type_probabilities.ipynb
+
+#### L1-cellpop-lite-v2.ipynb
+* A notebook version of L1-cellpop-lite.r that incorporates cell death and assumes a stationary population at initialization
+
+#### L1-cellpop-lite.ipynb
+* Notebook version of L1-cellpop-lite.r, for development
+
 #### L1-cellpop.ipynb
-* Notebook version of the L1-cellpop.r script, for development
+* Notebook version of L1-cellpop.r, for development
 
 #### gen-sim.r
 * Script for simulating retrotransposition of L1 elements in a single genome
