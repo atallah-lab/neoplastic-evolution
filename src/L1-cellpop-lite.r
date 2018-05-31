@@ -71,7 +71,7 @@ NT <- args[2]     # Number of time steps
 ######################################################################################
 
 if (args[1]=='batch') {
-    sv <- c(0.000, 0.001, 0.010, 0.100, 1.000) # array of selection strengths over 4 orders of magnitude
+    sv <- c(0.000, 0.25, 0.5, 0.75, 1.0) # array of selection strengths over 4 orders of magnitude
 	nrun <- 0
 	for (sdi in 1:5) {
 		for (spi in 1:5) {
@@ -151,7 +151,7 @@ if (args[1]=='batch') {
 
         N <<- append(N,sum(vapply(CellPop$Get('ncells'),tail,n=1L,FUN.VALUE = numeric(1))))   
             
-	save(CellPop,N, file=paste0(args[3]))              
+	# save(CellPop,N, file=paste0(args[3]))              
 
 	print(proc.time()-ptm)
 
