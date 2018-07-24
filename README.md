@@ -49,8 +49,11 @@ Monot et al. studed the relative enrichment of L1 insertion frequencies amongst 
 * A simplified version of L1-cellpop.r, in which mutation effects are determined via probabilistic sampling
 * The probabilities of three mutation types: passenger, driver, and null, were determined using the notebook: https://github.com/atallah-lab/analyses/blob/master/mutation_type_probabilities.ipynb
 
-#### L1-cellpop-lite-v2.ipynb
-* A notebook version of L1-cellpop-lite.r that incorporates cell death and assumes a stationary population at initialization
+#### L1-cellpop-lite-v22.r
+* Updated version of L1-cellpop-lite.r that incorporates cell death and assumes a stationary population at initialization
+
+#### L1-cellpop-lite-v2.2.ipynb
+* Notebook version of L1-cellpop-lite-v22.r, for development
 
 #### L1-cellpop-lite.ipynb
 * Notebook version of L1-cellpop-lite.r, for development
@@ -75,7 +78,7 @@ Monot et al. studed the relative enrichment of L1 insertion frequencies amongst 
 developing the genome-level retrotransposition model.
 * Dependencies: R(>= 2.8.0, Packages - Biostrings, BSgenome (for default hg38), GenomicRanges), Jupyter, IRKernel
 
-#### exon_sim_annotation.ipynb
+#### sim_exon_annotation.ipynb
 * A notebook for creating a table of exon loci in hg38 as well as their associated genes and whether the genes are known tumor suppressor genes or not. This table is stored in the data file ./data/exann.rda
 
 #### mapchrom_parallel.r
@@ -95,7 +98,7 @@ developing the genome-level retrotransposition model.
 #### get_chrom_sv_dists.r
 * Stores the counts of each EN site category for each chromosome in a 24 x 4 matrix, as well as their probabilities.
 
-#### save_chrom_site_class_dists.ipynb
+#### save_chrom_sv_dists.ipynb
 * The notebook used to generate the file ./data/chromSitesPd.rda, which contains the probability of insertion distributions for the various snap-velcro categories for each chromosome of hg38. This is similar to the above script, except it adds endonuclease-independent insertions as a class and accounts for their probability (assumed 0.1 in the script).
 
 #### hgextract.r
