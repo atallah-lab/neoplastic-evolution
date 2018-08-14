@@ -47,7 +47,7 @@ Monot et al. studed the relative enrichment of L1 insertion frequencies amongst 
 
 
 #### L1-cellpop-stoch.ipynb
-* A version of the simulation implemented in L1-cellpop.r (and .ipynb), that assumes an initially stationary population, incorporates cell death, and is focused on simulating population dynamics stochastically.
+* A version of the simulation implemented in L1-cellpop.r (and .ipynb) that assumes an initially stationary population, incorporates cell death, and is focused on simulating population dynamics stochastically.
 
 #### L1-cellpop.ipynb
 * Notebook version of L1-cellpop.r, for development
