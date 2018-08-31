@@ -35,10 +35,10 @@ Monot et al. studed the relative enrichment of L1 insertion frequencies amongst 
 ## Source Code
 
 #### somlin-L1.ipynb
-* Notebook for simulating evolution of a **som**atic cell **lin**eage, incorporating **L1** retrotransposition events and response to mutations
+* Notebook for simulating evolution of a **SOM**atic cell **LIN**eage, incorporating **L1** retrotransposition events and response to mutations
 
 #### sompop-L1.ipynb
-* A version of the simulation implemented in somlin-L1.ipynb that assumes an initially stationary **som**atic cell **pop**ulation, incorporates cell death, and focuses on stochastic simulation of population dynamics.
+* A version of the simulation implemented in somlin-L1.ipynb that assumes an initially stationary **SOM**atic cell **POP**ulation, incorporates cell death, and focuses on stochastic simulation of population dynamics.
 
 #### sompop-L1-v2.ipynb
 * A version of sompop-L1.ipynb that uses a two-hit model of driver and passenger mutations, and tracks disrupted genes for each clone of the population.
