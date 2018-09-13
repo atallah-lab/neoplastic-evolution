@@ -26,7 +26,7 @@ mapsequence <- function(seq) {
         icl_s<-which(snaps==tar & velrnks < 0.5)
         iot_s<-which(snaps!=tar & velrnks >= 0.5)
         iol_s<-which(snaps!=tar & velrnks < 0.5)
-        insites_s<-end(mtchView)
+        insites_s<-end(mtchView)-10
 
 #--- Create EN site annotation for anti-sense strand
 
@@ -47,7 +47,7 @@ mapsequence <- function(seq) {
 	icl_ns<-which(snaps==tar & velrnks < 0.5)
 	iot_ns<-which(snaps!=tar & velrnks >= 0.5)
 	iol_ns<-which(snaps!=tar & velrnks < 0.5)
-	insites_ns<-start(mtchView)
+	insites_ns<-start(mtchView)-10
 
 #--- Store the loci for the sense and anti-sense strands in a 2-column array
 
