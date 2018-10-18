@@ -42,7 +42,7 @@ for (chrnm in names(genome)[1:24]){
 	iol<-map$iol
 	insites<-map$insites
 
-	chrmpd[idx,]<-c(11.55*length(which(!is.na(ict))),7.25*length(which(!is.na(icl))),1.95*length(which(!is.na(iot))),1*length(which(!is.na(iol))))
+	chrmpd[idx,]<-c(7.46*length(which(!is.na(ict))),3.48*length(which(!is.na(icl))),2.05*length(which(!is.na(iot))),1*length(which(!is.na(iol))))
 	chrmcnt[idx,]<-c(length(which(!is.na(ict))),length(which(!is.na(icl))),length(which(!is.na(iot))),length(which(!is.na(iol))))
 	chrmpd[idx,]<-chrmpd[idx,]/sum(chrmpd[idx,])
 	idx=idx+1

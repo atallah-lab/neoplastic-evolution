@@ -80,7 +80,7 @@ for (chrnm in names(chrmlist)) {
 
 	chrcopyNum<-chrmlist[[chrnm]]
 
-	pd <- c(11.55*length(which(!is.na(ict))),7.25*length(which(!is.na(icl))),1.95*length(which(!is.na(iot))),1*length(which(!is.na(iol))))
+	pd <- c(7.46*length(which(!is.na(ict))),3.48*length(which(!is.na(icl))),2.05*length(which(!is.na(iot))),1.00*length(which(!is.na(iol))))
 	pd <- (pd/sum(pd))*(1-ENifrc)
 	pd <- append(pd,ENifrc)
 	cat("\nSite class distribution:\n",pd)
