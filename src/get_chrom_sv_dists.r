@@ -33,7 +33,7 @@ idx=1
 for (chrnm in names(genome)[1:24]){
 
 	cat(paste("\nLoading map file...",chrnm))
-	load(paste0("./data/root_maps/",chrnm,".rda")) # reads data file as '<chr1>map.rda'.
+	load(paste0("../data/root_maps/",chrnm,".rda")) # reads data file as '<chr1>map.rda'.
 
 	map<-get(paste0(chrnm,"Map")) 	# closed tight
 	ict<-map$ict			# closed loose
@@ -48,4 +48,4 @@ for (chrnm in names(genome)[1:24]){
 	idx=idx+1
 }
 #--- Saves probability distribution file for all seleted chromosomes.
-save(chrmpd,chrmcnt,file="./data/chrmpd.rda") 
+save(chrmpd,chrmcnt,file="../data/chrmpd.rda") 
