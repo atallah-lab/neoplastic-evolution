@@ -139,9 +139,7 @@ sompop <- function(N0, mu, tau, NT, sld, slp, spd, spp, gender, driverGene, gene
         update_genes <- update_genes_f
         update_mcount <- update_mcount_f
     } else {stop('Argument gender must be \'male\' or \'female\'.')}
-    
-    system(paste0('rm ',logpath))
-    
+        
     gene_pd$type[gene_pd$gene_sym %in% geneList] <- 1
     write(paste0(toString(length(which(gene_pd$type==1))),' out of ',length(geneList),
                  ' driver genes found in gene_pd.'),
@@ -161,6 +159,18 @@ sompop <- function(N0, mu, tau, NT, sld, slp, spd, spp, gender, driverGene, gene
                       genes_new=rep(list(''),nclones),
                       new_types=rep(list(),nclones))
     
+    # Initialize population with no mutations
+    Pop[1,c('ncells','nd_het','np_het','nd_hom','np_hom','genes_het','genes_hom','genes_new','new_types'):=
+         list(c(N0),
+         c(0),
+         c(0),
+         c(0),
+         c(0),
+         list(c('')),
+         list(c('')),
+         list(c('')),
+         list(c()))]
+    
     # Initialize population with a 1-cell heterozygous driver mutation
 #     Pop[1:2,c('ncells','nd_het','np_het','nd_hom','np_hom','genes_het','genes_hom','genes_new','new_types'):=list(c(N0-1,1),
 #                                                                                  c(0,1),
@@ -172,23 +182,22 @@ sompop <- function(N0, mu, tau, NT, sld, slp, spd, spp, gender, driverGene, gene
 #                                                                                  list(c(''),c('')),
 #                                                                                  c(0,1))]
     
-    # Initialize all cells with a random heterozygous driver mutation
-    rand_driver <- sample(gene_pd$gene_id[gene_pd$type==1],1)
-    Pop[1,c('ncells','nd_het','np_het','nd_hom','np_hom','genes_het','genes_hom','genes_new','new_types'):=
-         list(c(N0),
-         c(1),
-         c(0),
-         c(0),
-         c(0),
-         list(c(rand_driver)),
-         list(c('')),
-         list(c('')),
-         list(c()))]
-    
-    write(paste('Random heterozygous driver:',
-                 rand_driver,' ', 
-                 gene_pd$gene_sym[gene_pd$gene_id==rand_driver]),
-          file=logpath,append=TRUE)
+    # Initialize all cells with (possibly random) heterozygous driver mutation
+#     rand_driver <- sample(gene_pd$gene_id[gene_pd$type==1],1)
+#     Pop[1,c('ncells','nd_het','np_het','nd_hom','np_hom','genes_het','genes_hom','genes_new','new_types'):=
+#          list(c(N0),
+#          c(1),
+#          c(0),
+#          c(0),
+#          c(0),
+#          list(c(driverGene)),
+#          list(c('')),
+#          list(c('')),
+#          list(c()))]
+#     write(paste('Random heterozygous driver:',
+#                  rand_driver,' ', 
+#                  gene_pd$gene_sym[gene_pd$gene_id==rand_driver]),
+#           file=logpath,append=TRUE)
     
     # Assign birth and insertion rates
     Pop[1:2, B := mapply(birthrate, nd_het, np_het, nd_hom, np_hom, sld, slp, spd, spp)]
@@ -211,8 +220,8 @@ sompop <- function(N0, mu, tau, NT, sld, slp, spd, spp, gender, driverGene, gene
         N[ii] <- sum(Pop$ncells) # Get current number of cells
         if (N[ii]>=3*N0 || N[ii]<1) {break} # Simulation stops if population has grown by 3X or died
         genTime[ii] <- 1/mean(Pop$B[clog]) # Get generation length
-#         D <- N[ii]*tau*genTime[ii]/N0 # Linear death rate function (cell deaths per time-step per cell)
-        D <- log(1 + (e-1)*N[ii]/N0)*tau*genTime[ii] # Log death rate function
+        D <- N[ii]*tau*genTime[ii]/N0 # Linear death rate function (cell deaths per time-step per cell)
+#         D <- log(1 + (e-1)*N[ii]/N0)*tau*genTime[ii] # Log death rate function
 
         nins <- sum(unlist(mapply(get_nins,Pop$ncells[clog],Pop$mu_i[clog],SIMPLIFY=FALSE))) # Get number of exonic insertions
         if (nins > 0) {
@@ -246,7 +255,8 @@ sompop <- function(N0, mu, tau, NT, sld, slp, spd, spp, gender, driverGene, gene
             gene_types <- tmp2
             
             new_inds <- rownew:(rownew+length(clonesWIns)-1)
-            Pop[new_inds, c("ncells","nd_het","np_het","nd_hom","np_hom","genes_het","genes_hom","genes_new","new_types"):=list(1, 
+            Pop[new_inds, 
+                c("ncells","nd_het","np_het","nd_hom","np_hom","genes_het","genes_hom","genes_new","new_types"):=list(1, 
                                                                                         Pop$nd_het[clonesWIns], 
                                                                                         Pop$np_het[clonesWIns], 
                                                                                         Pop$nd_hom[clonesWIns], 
