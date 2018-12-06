@@ -1,5 +1,6 @@
 # sim-develop
-An R project developed to simulate transposable element activity in genome evolution.
+An R project developed to simulate transposable element activity in population dynamics.
+
 ### Background 
 ---
 #### Introduction
