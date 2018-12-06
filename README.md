@@ -28,11 +28,10 @@ GAGCCAGCCATTTTTTTTTT
 
 Each score for a velcro region is divided by this maximum score as a normalization. If the position-weighted T-density score of the velcro region is ≥0.5 then that region is considered tightly-fastened, otherwise it is loosely-fastened.
 
-#### Relevance of 'Snap-Velcro' Model in the Simulation of Transposable Elements
-Monot et al. studed the relative enrichment of L1 insertion frequencies amongst the four snap-velcro categories in humans. They recorded the number of insertions observed at each type of EN site and divided this by the number of site-types in the reference genome (hg19 in their study). Amongst two datasets of human L1 insertions (Solyom, 2012; Lee, 2012) they found that the average relative enrichment for the closed/tight, closed/loose, open/tight, and open/loose categories was, respectively 11.55, 7.25, 1.95, 1.00. 
-
-
 ## Source Code
+
+#### src_sompop_v0_2_5.r
+* R library 'parallel' is incorporated to run all 'mappply()' calls in in parallel as mcmapply()
 
 #### src_sompop_v0_2_4.r
 * An R file containing function definitions. Functions define a stochastic simulation of neoplastic evolution under selective effects of L1 retrotransposition. A diploid system is modeled, differentiating heterozygous and homozygous mutations. Time leaps are scaled to generation time of the population.
@@ -43,19 +42,29 @@ Monot et al. studed the relative enrichment of L1 insertion frequencies amongst 
 #### src_sompop_v0_1_1.r
 * An earlier version of the simulation described for src_sompop_v0_2_4.r. Driver and passenger mutations have fixed effects. Heterozygous and homozygous insertions are not differentiated.
 
+#### run_v2_5.ipynb
+* Jupyter notebook for defining parameters and running sompop_v0_2_5. Single test runs and simple visualization of results, or large batches can be performed.
+
 #### run_v2_4.ipynb
-* Jupyter notebook for defining parameters and running sompop_v0_2_4. Single test runs and simple visualization of results, or large batches can be performed.
+* See description for run_v2_5.ipynb.
+* Applies to sompop_v0_2_3
 
 #### run_v2_3.ipynb
-* See description for run_v2_4.ipynb.
+* See description for run_v2_5.ipynb.
 * Applies to sompop_v0_2_3
 
 #### run_v1_1.ipynb
-* See description for run_v2_4.ipynb.
+* See description for run_v2_5.ipynb.
 * Applies to sompop_v0_1_1
 
 
 ## Data
+
+#### ./data/drivers_XXXX.txt
+* Text file containing a column of selected tumor suppressor genes for the tumor type XXXX (Lung squamous cell - LUSC, Glioblastoma multiforme - GBM, Colorectal adenocarcinoma - COREAD). Present driver gene lists were selected from IntOGen database: https://www.intogen.org/search
+
+#### ./data/drivers_XXXX_filt.txt
+* Same as above except some filters have been applied to the lists
 
 #### ./data/tumor_type_pd_cgc.rda
 * Contains R data objects which are length-3 arrays storing probabilities of driver, passenger and null-effect L1 insertions in tumor suppressor genes (TSGs) for three cancer types (lung, colon, and brain), using TSGs reported in Cancer Gene Census.
