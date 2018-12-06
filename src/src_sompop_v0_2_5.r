@@ -200,8 +200,8 @@ sompop <- function(N0, mu, tau, NT, sld, slp, spd, spp, gender, driverGene, gene
 #           file=logpath,append=TRUE)
     
     # Assign birth and insertion rates
-    Pop[1:2, B := mapply(birthrate, nd_het, np_het, nd_hom, np_hom, sld, slp, spd, spp)]
-    Pop[1:2, mu_i := mapply(get_mu_i, B, mu, tau, 1)]
+    Pop[1:2, B := mcmapply(birthrate, nd_het, np_het, nd_hom, np_hom, sld, slp, spd, spp)]
+    Pop[1:2, mu_i := mcmapply(get_mu_i, B, mu, tau, 1)]
     
     N <- rep(0,NT) # Allocate array for population size time series
     genTime <- rep(0,NT) # Allocate array for generation time factor
@@ -223,7 +223,7 @@ sompop <- function(N0, mu, tau, NT, sld, slp, spd, spp, gender, driverGene, gene
         D <- N[ii]*tau*genTime[ii]/N0 # Linear death rate function (cell deaths per time-step per cell)
 #         D <- log(1 + (e-1)*N[ii]/N0)*tau*genTime[ii] # Log death rate function
 
-        nins <- sum(unlist(mapply(get_nins,Pop$ncells[clog],Pop$mu_i[clog],SIMPLIFY=FALSE))) # Get number of exonic insertions
+        nins <- sum(unlist(mcmapply(get_nins,Pop$ncells[clog],Pop$mu_i[clog],SIMPLIFY=FALSE))) # Get number of exonic insertions
         if (nins > 0) {
             
             rownew <- which(Pop$ncells==0)[1] # Find first row of the data table with ncells==0
@@ -267,13 +267,13 @@ sompop <- function(N0, mu, tau, NT, sld, slp, spd, spp, gender, driverGene, gene
                                                                                         gene_types)]
             
             # Update gene lists
-            tmp1 <- t(mapply(update_genes,Pop$genes_new[new_inds],Pop$genes_het[new_inds],Pop$genes_hom[new_inds],SIMPLIFY=TRUE))
+            tmp1 <- t(mcmapply(update_genes,Pop$genes_new[new_inds],Pop$genes_het[new_inds],Pop$genes_hom[new_inds],SIMPLIFY=TRUE))
             Pop$genes_het[new_inds] <- tmp1[,1]
             Pop$genes_hom[new_inds] <- tmp1[,2]
             Pop$genes_new[new_inds] <- tmp1[,3]
             
             # Update insertion counts
-            tmp2<-t(mapply(update_mcount,
+            tmp2<-t(mcmapply(update_mcount,
                            Pop$nd_het[new_inds],
                            Pop$np_het[new_inds],
                            Pop$nd_hom[new_inds],
@@ -287,11 +287,11 @@ sompop <- function(N0, mu, tau, NT, sld, slp, spd, spp, gender, driverGene, gene
                      unlist(tmp2[,4]))]
             
             # Update birth and insertion rates
-            Pop[new_inds, B := mapply(birthrate, nd_het, np_het, nd_hom, np_hom, sld, slp, spd, spp)]
-            Pop[new_inds, mu_i := mapply(get_mu_i, B, mu, tau, genTime[ii])]
+            Pop[new_inds, B := mcmapply(birthrate, nd_het, np_het, nd_hom, np_hom, sld, slp, spd, spp)]
+            Pop[new_inds, mu_i := mcmapply(get_mu_i, B, mu, tau, genTime[ii])]
         }
         
-        Pop[Pop$ncells>0, ncells:=mapply(delta_ncells, B, D, ncells, tau, genTime[ii])] # Update number of cells for all clones
+        Pop[Pop$ncells>0, ncells:=mcmapply(delta_ncells, B, D, ncells, tau, genTime[ii])] # Update number of cells for all clones
         Pop <- Pop[order(Pop$ncells,decreasing=TRUE),] # Order data.table by ncells
     }
     print(proc.time() - ptm)
