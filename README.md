@@ -3,9 +3,6 @@ An R project developed to simulate transposable element activity in population d
 
 ## Source Code
 
-#### ./src/src_sompop_v0_2_5.r
-* An R file containing function definitions for simulation
-
 #### ./src/run_v2_5.r
 * An R script for running sompop_v0_2_5 simulation.
 
@@ -72,6 +69,9 @@ Options:
 
 #### ./src/run_v2_5.ipynb
 * Jupyter notebook for defining parameters and running sompop_v0_2_5. Single test runs and simple visualization of results, or batch runs can be performed.
+
+#### ./src/src_sompop_v0_2_5.r
+* An R file containing function definitions for simulation
 
 ## Data
 
