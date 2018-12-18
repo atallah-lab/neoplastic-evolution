@@ -5,12 +5,12 @@ An R project developed to simulate somatic population dynamics of transposable e
 ##### Required:
 * data.table
 	- https://cran.r-project.org/web/packages/data.table/data.table.pdf
-	- ```> install.packages('data.table')```
+	- ```install.packages('data.table')```
 
 ##### For run_v2_5.r script:
 * optparse
 	+ https://cran.r-project.org/web/packages/optparse/optparse.pdf
-	+ ```> install.packages('optparse')```
+	+ ```install.packages('optparse')```
 	
 ##### For run_v2_5.ipynb notebook:
 * Jupyter notebook
