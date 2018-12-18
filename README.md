@@ -1,5 +1,5 @@
 # sim-develop
-An R project developed to simulate transposable element activity in population dynamics.
+An R project developed to simulate somatic population dynamics of transposable elements.
 
 ## Source Code
 
@@ -68,7 +68,7 @@ Options:
 ```
 
 #### ./src/run_v2_5.ipynb
-* Jupyter notebook for defining parameters and running sompop_v0_2_5. Single test runs and simple visualization of results, or batch runs can be performed.
+* Jupyter notebook for running sompop_v0_2_5. Set up to perform single test runs and basic visualization of results, or batch runs.
 
 #### ./src/src_sompop_v0_2_5.r
 * An R file containing function definitions for simulation
@@ -86,7 +86,7 @@ Options:
 * Folder storing text files with lists of driver genes by ENSEMBL ID for simulating different tumor types
 
 #### ./data/genomes/hg38/drivers_XXXX.txt
-* Text file containing a column of selected tumor suppressor genes for the tumor type XXXX (Lung squamous cell - LUSC, Glioblastoma multiforme - GBM, Colorectal adenocarcinoma - COREAD). Present driver gene lists were selected from IntOGen database: https://www.intogen.org/search
+* Text file containing a column of selected tumor suppressor genes for the tumor type XXXX (Lung squamous cell - LUSC, Glioblastoma multiforme - GBM, Colorectal adenocarcinoma - COREAD). Current driver gene lists were selected from IntOGen database: https://www.intogen.org/search
 
 #### ./data/genomes/hg38/drivers_XXXX_filt.txt
 * Same as above except some filters have been applied to the lists
