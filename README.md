@@ -1,12 +1,28 @@
 # sim-develop
 An R project developed to simulate somatic population dynamics of transposable elements.
 
+## Dependencies:
+##### Required:
+* data.table
+	- https://cran.r-project.org/web/packages/data.table/data.table.pdf
+	- ```> install.packages('data.table')```
+
+##### For run_v2_5.r script:
+* optparse
+	+ https://cran.r-project.org/web/packages/optparse/optparse.pdf
+	+ ```> install.packages('optparse')```
+	
+##### For run_v2_5.ipynb notebook:
+* Jupyter notebook
+	+ http://jupyter.org/install
+* IRKernel
+	+ https://irkernel.github.io/installation/z
+	
 ## Source Code
 
 #### ./src/run_v2_5.r
 * An R script for running sompop_v0_2_5 simulation.
-
-  
+		
 ```{r}
 Usage: ./run_v2_5.r [options]
 
