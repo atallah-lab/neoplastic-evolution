@@ -6,6 +6,9 @@ An R project developed to simulate somatic population dynamics of transposable e
 * data.table
 	- https://cran.r-project.org/web/packages/data.table/data.table.pdf
 	- ```install.packages('data.table')```
+* parallel
+	- https://stat.ethz.ch/R-manual/R-devel/library/parallel/doc/parallel.pdf
+	- ```install.packages('parallel')```
 
 ##### For run_v2_5.r script:
 * optparse
