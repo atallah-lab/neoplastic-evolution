@@ -128,23 +128,37 @@ update_mcount_m <- function(nd_het,np_het,nd_hom,np_hom,typemut,typegene) {
 }
 
 ##### run_sim() #####
-sompop <- function(N0, mu, tau, NT, sld, slp, spd, spp, gender, driverGene, geneList, nclones, logpath) {
+sompop <- function(N0, mui, tau, NT, sld, slp, spd, spp, gender, inGene, geneListFile, nclones, logpath, mode) {
 
     if (gender=='male') {
+        mu <- mui*pd_exvsnon_m[1] # scale insertion rate by 1-probability of non-exonic insertion
         gene_pd <- gene_pd_m
         update_genes <- update_genes_m
         update_mcount <- update_mcount_m
     } else if (gender=='female') {
+        mu <- mui*pd_exvsnon_f[1]
         gene_pd <- gene_pd_f
         update_genes <- update_genes_f
         update_mcount <- update_mcount_f
     } else {stop('Argument gender must be \'male\' or \'female\'.')}
         
-    gene_pd$type[gene_pd$gene_sym %in% geneList] <- 1
-    write(paste0(toString(length(which(gene_pd$type==1))),' out of ',length(geneList),
-                 ' driver genes found in gene_pd.'),
+    # Initialize driver genes (assign their type as 1)
+    geneList <- read.csv(geneListFile,header=F)$V1
+    geneList <- gene_pd_m[gene_pd_m$gene_id %in% geneList]$gene_id
+    gene_pd$type[gene_pd$gene_id %in% geneList] <- 1
+    
+    write(paste0('\n\n',Sys.time(),'\n',toString(length(which(gene_pd$type==1))),' out of ',length(geneList),
+                 ' driver genes found in annotation'),
           file=logpath,
           append=TRUE)
+    write(paste0('Initial size: ',N0),file=logpath,append=TRUE)
+    write(paste0('Insertion rate: ',mui),file=logpath,append=TRUE)
+    write(paste0('Number time steps: ',NT),file=logpath,append=TRUE)
+    write(paste0('Gender: ',gender),file=logpath,append=TRUE)
+    write(paste0('Selection coefficients (sD, sP, sd, sp): ',spd,', ',spp,', ',sld,', ',slp),file=logpath,append=TRUE)
+    write(paste0('Driver gene list file: ',geneListFile),file=logpath,append=TRUE)
+    write(paste0('Initial mutations: ',mode),file=logpath,append=TRUE)
+    if (mode!="none") {write(paste0('Initial mutated gene: ',inGene),file=logpath,append=TRUE)}
     
     # Allocate population
     Pop <- data.table(ncells=rep(0,nclones),
@@ -159,46 +173,54 @@ sompop <- function(N0, mu, tau, NT, sld, slp, spd, spp, gender, driverGene, gene
                       genes_new=rep(list(''),nclones),
                       new_types=rep(list(),nclones))
     
-    # Initialize population with no mutations
-    Pop[1,c('ncells','nd_het','np_het','nd_hom','np_hom','genes_het','genes_hom','genes_new','new_types'):=
-         list(c(N0),
-         c(0),
-         c(0),
-         c(0),
-         c(0),
-         list(c('')),
-         list(c('')),
-         list(c('')),
-         list(c()))]
+    if (mode=='none') {
+        # Initialize population with no mutations
+        Pop[1,c('ncells','nd_het','np_het','nd_hom','np_hom','genes_het','genes_hom','genes_new','new_types'):=
+             list(c(N0),
+             c(0),
+             c(0),
+             c(0),
+             c(0),
+             list(c('')),
+             list(c('')),
+             list(c('')),
+             list(c()))]
+    } else if (mode=='single') {
     
-    # Initialize population with a 1-cell heterozygous driver mutation
-#     Pop[1:2,c('ncells','nd_het','np_het','nd_hom','np_hom','genes_het','genes_hom','genes_new','new_types'):=list(c(N0-1,1),
-#                                                                                  c(0,1),
-#                                                                                  c(0,0),
-#                                                                                  c(0,0),
-#                                                                                  c(0,0),
-#                                                                                  list(c(''),c(driverGene)),
-#                                                                                  list(c(''),c('')),
-#                                                                                  list(c(''),c('')),
-#                                                                                  list(c(0,1)))]
-    
-    # Initialize all cells with (possibly random) heterozygous driver mutation
-#     rand_driver <- sample(gene_pd$gene_id[gene_pd$type==1],1)
-#     Pop[1,c('ncells','nd_het','np_het','nd_hom','np_hom','genes_het','genes_hom','genes_new','new_types'):=
-#          list(c(N0),
-#          c(1),
-#          c(0),
-#          c(0),
-#          c(0),
-#          list(c(driverGene)),
-#          list(c('')),
-#          list(c('')),
-#          list(c()))]
-#     write(paste('Random heterozygous driver:',
-#                  rand_driver,' ', 
-#                  gene_pd$gene_sym[gene_pd$gene_id==rand_driver]),
-#           file=logpath,append=TRUE)
-    
+        # Initialize population with a 1-cell heterozygous mutation
+        Pop[1:2,c('ncells','nd_het','np_het','nd_hom','np_hom','genes_het','genes_hom','genes_new','new_types'):=list(c(N0-1,1),
+                                                                                     c(0,1),
+                                                                                     c(0,0),
+                                                                                     c(0,0),
+                                                                                     c(0,0),
+                                                                                     list(c(''),c(inGene)),
+                                                                                     list(c(''),c('')),
+                                                                                     list(c(''),c('')),
+                                                                                     list(c(0,1)))]
+        write(paste('Initial driver:',
+                     inGene,' ', 
+                     gene_pd$gene_sym[gene_pd$gene_id==inGene]),
+                     file=logpath,append=TRUE)
+        
+    } else if (mode=='inherited') {
+        
+        # Initialize all cells with heterozygous mutation
+        Pop[1,c('ncells','nd_het','np_het','nd_hom','np_hom','genes_het','genes_hom','genes_new','new_types'):=
+             list(c(N0),
+             c(1),
+             c(0),
+             c(0),
+             c(0),
+             list(c(inGene)),
+             list(c('')),
+             list(c('')),
+             list(c()))]
+        write(paste('Initial driver:',
+                     inGene,' ', 
+                     gene_pd$gene_sym[gene_pd$gene_id==inGene]),
+                     file=logpath,append=TRUE)
+    }
+            
     # Assign birth and insertion rates
     Pop[1:2, B := mcmapply(birthrate, nd_het, np_het, nd_hom, np_hom, sld, slp, spd, spp)]
     Pop[1:2, mu_i := mcmapply(get_mu_i, B, mu, tau, 1)]
