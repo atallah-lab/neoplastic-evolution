@@ -69,7 +69,7 @@ Options:
 
 	--initial_mut=INITIAL_MUT
 		'none' - no mutations in initial population
-		'single' - 1 gene is heterozygously disrupted in a single cell of population (flag --initial_gene specifies this gene)
+		'single' - 1 gene is heterozygously disrupted in 1 cell of the initial population (flag --initial_gene specifies this gene)
 		'inherited' - 1 gene is heterozygously disrupted in all cells of initial population (flag --initial_gene specifies this gene)
 		[default = none]
 
@@ -95,7 +95,7 @@ Options:
 ## Data
 
 #### ./data/genomes
-* Directory for storing sub-folders for each host genome that can be simulated. Contains only hg38 by default.
+* Directory with sub-folders for each host genome that can be simulated. Contains only hg38 by default.
 * Sub-folders hold data files required for simulation
 
 #### ./data/output
