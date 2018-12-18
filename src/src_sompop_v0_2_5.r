@@ -197,10 +197,6 @@ sompop <- function(N0, mui, tau, NT, sld, slp, spd, spp, gender, inGene, geneLis
                                                                                      list(c(''),c('')),
                                                                                      list(c(''),c('')),
                                                                                      list(c(0,1)))]
-        write(paste('Initial driver:',
-                     inGene,' ', 
-                     gene_pd$gene_sym[gene_pd$gene_id==inGene]),
-                     file=logpath,append=TRUE)
         
     } else if (mode=='inherited') {
         
@@ -215,10 +211,6 @@ sompop <- function(N0, mui, tau, NT, sld, slp, spd, spp, gender, inGene, geneLis
              list(c('')),
              list(c('')),
              list(c()))]
-        write(paste('Initial driver:',
-                     inGene,' ', 
-                     gene_pd$gene_sym[gene_pd$gene_id==inGene]),
-                     file=logpath,append=TRUE)
     }
             
     # Assign birth and insertion rates

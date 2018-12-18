@@ -5,7 +5,7 @@ library(parallel)
 
 option_list = list(
         make_option(c("-d", "--drivers"), type="character", default="../data/gene_lists/drivers_lusc_filt.txt",
-                help="List of driver genes: text file with single column of driver gene ENSEMBL IDs [default = %default (Lung Squamous Cell Carcinoma)]"),
+                help="List of driver genes: text file with single column of driver gene ENSEMBL IDs\n\t\t[default = %default (Lung Squamous Cell Carcinoma)]"),
         
         make_option(c("-g", "--gender"), type="character", default="female",
                 help="Gender of host: 'male' or 'female' [default = %default]"),
@@ -29,7 +29,7 @@ option_list = list(
                 help="Selection coefficient of heterozygous passenger mutations [default = sP/10]"),
 
         make_option(c("-t", "--number_timesteps"), type="integer", default=1e3,
-                help="Number of time steps to simulate\n (Note: by default 1 time step = 1 cell generation) [default = %default]"),
+                help="Number of time steps to simulate\n\t\t[default = %default]\n\t\t(Note: by default 1 time step = 1 cell generation)"),
         
         make_option(c("--tau"), type="double", default=1,
                 help="Time resolution: number of time steps each generation is divided into [default = %default]"),
@@ -38,10 +38,7 @@ option_list = list(
                 help="Path to log file [default = %default]"),
 
         make_option(c("--initial_mut"), type="character", default="none",
-                help="'none' - no mutations in initial population\n,
-                	  'single' - 1 gene is heterozygously disrupted in a single cell of population (flag --initial_gene specifies this gene)\n
-                	  'inherited' - 1 gene is heterozygously disrupted in all cells of initial population (flag --initial_gene specifies this gene)\n
-                	   [default = %default]"),
+                help="'none' - no mutations in initial population\n\t\t'single' - 1 gene is heterozygously disrupted in a single cell of population (flag --initial_gene specifies this gene)\n\t\t'inherited' - 1 gene is heterozygously disrupted in all cells of initial population (flag --initial_gene specifies this gene)\n\t\t[default = %default]"),
 
         make_option(c("--initial_gene"), type="character", default="ENSG00000141510",
                 help="Gene disrupted at initialization if using --im 'single' or 'inherited' [default = %default (TP53 gene)]"),
@@ -53,10 +50,7 @@ option_list = list(
                 help="Path to output data file [default = %default]")
 
 )
-opt_parser = OptionParser(option_list=option_list)
-opt = parse_args(opt_parser)
-
-if (!is.null(opt$help))
+opt = parse_args(OptionParser(option_list=option_list))
 
 load(paste0(opt$data_folder,'/exonicvsnon_counts.rda')) # Data objects holding probability of exonic vs non-exonic insertion
 load(paste0(opt$data_folder,'/gene_pd_exon.rda')) # Data objects holding probability of insertion in each gene
