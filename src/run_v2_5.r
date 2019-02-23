@@ -4,7 +4,7 @@ library(data.table)
 library(parallel)
 
 option_list = list(
-        make_option(c("-d", "--drivers"), type="character", default="../data/gene_lists/drivers_lusc_filt.txt",
+        make_option(c("--drivers"), type="character", default="../data/gene_lists/drivers_lusc_filt.txt",
                 help="List of driver genes: text file with single column of driver gene ENSEMBL IDs\n\t\t[default = %default (Lung Squamous Cell Carcinoma)]"),
         
         make_option(c("-g", "--gender"), type="character", default="female",
@@ -13,37 +13,40 @@ option_list = list(
         make_option(c("-n", "--initial_size"), type="integer", default=1e3,
                 help="Number of cells in initial population [default = %default]"),
         
-        make_option(c("-mu", "--insertion_rate"), type="double", default=1,
+        make_option(c("-m", "--insertion_rate"), type="double", default=1,
                 help="Average number of L1 insertions per cell cycle [default = %default]"),
         
-        make_option(c("-sD", "--driver_strength_hom"), type="double", default=0.1,
+        make_option(c("-D", "--driver_strength_hom"), type="double", default=0.1,
                 help="Selection coefficient of homozygous driver mutations [default = %default]"),
         
-        make_option(c("-sP", "--passenger_strength_hom"), type="double", default=0.005,
+        make_option(c("-P", "--passenger_strength_hom"), type="double", default=0.005,
                 help="Selection coefficient of homozygous passenger mutations [default = %default]"),
         
-        make_option(c("-sd", "--driver_strength_het"), type="double", default=NULL,
+        make_option(c("-d", "--driver_strength_het"), type="double", default=NULL,
                 help="Selection coefficient of heterozygous driver mutations [default = sD/10]"),
 
-        make_option(c("-sp", "--passenger_strength_het"), type="double", default=NULL,
+        make_option(c("-p", "--passenger_strength_het"), type="double", default=NULL,
                 help="Selection coefficient of heterozygous passenger mutations [default = sP/10]"),
 
         make_option(c("-t", "--number_timesteps"), type="integer", default=1e3,
                 help="Number of time steps to simulate\n\t\t[default = %default]\n\t\t(Note: by default 1 time step = 1 cell generation)"),
         
         make_option(c("--tau"), type="double", default=1,
-                help="Time resolution: number of time steps each generation is divided into [default = %default]"),
+                help="Time resolution: number of generations simulated per timestep (can be < 1) [default = %default]"),
 
         make_option(c("-l", "--log_path"), type="character", default="./log.txt",
                 help="Path to log file [default = %default]"),
+    
+        make_option(c("--parallel"), type="logical", default=FALSE,
+                help="Whether to use parallel processing [default = %default]"),
 
         make_option(c("--initial_mut"), type="character", default="none",
-                help="'none' - no mutations in initial population\n\t\t'single' - 1 gene is heterozygously disrupted in a single cell of population (flag --initial_gene specifies this gene)\n\t\t'inherited' - 1 gene is heterozygously disrupted in all cells of initial population (flag --initial_gene specifies this gene)\n\t\t[default = %default]"),
+                help="'none' - no mutations in initial population\n\t\t'single' - 1 gene is homozygously disrupted in a single cell of population (flag --initial_gene specifies this gene)\n\t\t'inherited' - 1 gene is heterozygously disrupted in all cells of initial population (flag --initial_gene specifies this gene)\n\t\t[default = %default]"),
 
         make_option(c("--initial_gene"), type="character", default="ENSG00000141510",
                 help="Gene disrupted at initialization if using --im 'single' or 'inherited' [default = %default (TP53 gene)]"),
 
-        make_option(c("-df", "--data_folder"), type="character", default="../data/genomes/hg38/",
+        make_option(c("-f", "--data_folder"), type="character", default="../data/genomes/hg38/",
                 help="Path to directory storing data files for simulated genome [default = %default]"),
 
         make_option(c("-o", "--output_file"), type="character", default="../data/output/test_out.rda",
@@ -74,7 +77,8 @@ out <- sompop(
 			opt$drivers, # File path: List of driver genes
 			maxNClones, # Maximum number of clones simulatable
 			opt$log_path, # Log file path
-            opt$initial_mut # How to initialize mutations in population
+            opt$initial_mut, # How to initialize mutations in population
+            opt$parallel
 )
 
 if (!is.null(opt$output_file)) {
@@ -88,7 +92,7 @@ if (!is.null(opt$output_file)) {
 	sP <- opt$passenger_strength_hom
 	sd <- opt$driver_strength_het
 	sp <- opt$passenger_strength_het
-	save(Pop,N,mut_genes,gen_time,N0,mu,sD,sP,sd,sp,file=opt$o)
+	save(Pop,N,mut_genes,gen_time,N0,mu,sD,sP,sd,sp,file=opt$output_file)
 }
 
 

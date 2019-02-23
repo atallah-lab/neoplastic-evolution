@@ -127,9 +127,12 @@ update_mcount_m <- function(nd_het,np_het,nd_hom,np_hom,typemut,typegene) {
     return(list(nd_het,np_het,nd_hom,np_hom))
 }
 
-##### run_sim() #####
-sompop <- function(N0, mui, tau, NT, sld, slp, spd, spp, gender, inGene, geneListFile, nclones, logpath, mode) {
+##### sompop() #####
+sompop <- function(N0, mui, tau, NT, sld, slp, spd, spp, gender, inGene, geneListFile, nclones, logpath, mode, parallel) {
 
+    if (parallel) {
+        mapply = mcmapply
+    }
     if (gender=='male') {
         mu <- mui*pd_exvsnon_m[1] # scale insertion rate by 1-probability of non-exonic insertion
         gene_pd <- gene_pd_m
@@ -144,13 +147,14 @@ sompop <- function(N0, mui, tau, NT, sld, slp, spd, spp, gender, inGene, geneLis
         
     # Initialize driver genes (assign their type as 1)
     geneList <- read.csv(geneListFile,header=F)$V1
-    geneList <- gene_pd_m[gene_pd_m$gene_id %in% geneList]$gene_id
     gene_pd$type[gene_pd$gene_id %in% geneList] <- 1
     
-    write(paste0('\n\n',Sys.time(),'\n',toString(length(which(gene_pd$type==1))),' out of ',length(geneList),
+    # Write to log file
+    write(paste0('\n',Sys.time(),'\n',toString(length(which(gene_pd$type==1))),' out of ',length(geneList),
                  ' driver genes found in annotation'),
           file=logpath,
           append=TRUE)
+    write(paste0('Using parallel: ',parallel),file=logpath,append=TRUE)
     write(paste0('Initial size: ',N0),file=logpath,append=TRUE)
     write(paste0('Insertion rate: ',mui),file=logpath,append=TRUE)
     write(paste0('Number time steps: ',NT),file=logpath,append=TRUE)
@@ -158,7 +162,16 @@ sompop <- function(N0, mui, tau, NT, sld, slp, spd, spp, gender, inGene, geneLis
     write(paste0('Selection coefficients (sD, sP, sd, sp): ',spd,', ',spp,', ',sld,', ',slp),file=logpath,append=TRUE)
     write(paste0('Driver gene list file: ',geneListFile),file=logpath,append=TRUE)
     write(paste0('Initial mutations: ',mode),file=logpath,append=TRUE)
-    if (mode!="none") {write(paste0('Initial mutated gene: ',inGene),file=logpath,append=TRUE)}
+    if (mode!='none') {
+        # Check if the given initially mutated driver gene is in the gene_pd annotation
+        if (length(which(gene_pd$gene_id==inGene))==0) {
+            write(paste0('ERROR: Initial mutated gene: ',inGene,' not found. Quitting.'),file=logpath,append=TRUE)
+            stop(paste0('ERROR: Initial mutated gene: ',inGene,' not found. Quitting.'))
+        }
+        write(paste0('Initial mutated gene: ',inGene,
+                                    ' (', gene_pd$gene_sym[gene_pd$gene_id==inGene],')'),
+                                    file=logpath,append=TRUE)
+    }
     
     # Allocate population
     Pop <- data.table(ncells=rep(0,nclones),
@@ -172,7 +185,7 @@ sompop <- function(N0, mui, tau, NT, sld, slp, spd, spp, gender, inGene, geneLis
                       genes_hom=rep(list(''),nclones),
                       genes_new=rep(list(''),nclones),
                       new_types=rep(list(),nclones))
-    
+    # Initialize population
     if (mode=='none') {
         # Initialize population with no mutations
         Pop[1,c('ncells','nd_het','np_het','nd_hom','np_hom','genes_het','genes_hom','genes_new','new_types'):=
@@ -186,21 +199,19 @@ sompop <- function(N0, mui, tau, NT, sld, slp, spd, spp, gender, inGene, geneLis
              list(c('')),
              list(c()))]
     } else if (mode=='single') {
-    
-        # Initialize population with a 1-cell heterozygous mutation
+        # Initialize population with a 1-cell homozygous driver mutation
         Pop[1:2,c('ncells','nd_het','np_het','nd_hom','np_hom','genes_het','genes_hom','genes_new','new_types'):=list(c(N0-1,1),
+                                                                                     c(0,0),
+                                                                                     c(0,0),
                                                                                      c(0,1),
                                                                                      c(0,0),
-                                                                                     c(0,0),
-                                                                                     c(0,0),
+                                                                                     list(c(''),c('')),
                                                                                      list(c(''),c(inGene)),
                                                                                      list(c(''),c('')),
-                                                                                     list(c(''),c('')),
-                                                                                     list(c(0,1)))]
+                                                                                     list(c(),c()))]
         
     } else if (mode=='inherited') {
-        
-        # Initialize all cells with heterozygous mutation
+        # Initialize all cells with heterozygous driver mutation
         Pop[1,c('ncells','nd_het','np_het','nd_hom','np_hom','genes_het','genes_hom','genes_new','new_types'):=
              list(c(N0),
              c(1),
@@ -214,8 +225,8 @@ sompop <- function(N0, mui, tau, NT, sld, slp, spd, spp, gender, inGene, geneLis
     }
             
     # Assign birth and insertion rates
-    Pop[1:2, B := mcmapply(birthrate, nd_het, np_het, nd_hom, np_hom, sld, slp, spd, spp)]
-    Pop[1:2, mu_i := mcmapply(get_mu_i, B, mu, tau, 1)]
+    Pop[1:2, B := mapply(birthrate, nd_het, np_het, nd_hom, np_hom, sld, slp, spd, spp)]
+    Pop[1:2, mu_i := mapply(get_mu_i, B, mu, tau, 1)]
     
     N <- rep(0,NT) # Allocate array for population size time series
     genTime <- rep(0,NT) # Allocate array for generation time factor
@@ -226,7 +237,7 @@ sompop <- function(N0, mui, tau, NT, sld, slp, spd, spp, gender, inGene, geneLis
     ptm <- proc.time()
     for (ii in 1:NT) { # Loop over time steps
         if(ii %in% c(round(NT/4),round(NT/4*2),round(NT/4*3),NT)) { # Print progress at 25% completed intervals
-            write(paste0(toString(ii/NT*100),'% done | ',format((proc.time()-ptm)[1],nsmall=3),' (s)'),file=logpath,append=TRUE)            
+            write(paste0(toString(ii/NT*100),'% done | ',format((proc.time()-ptm)[3],nsmall=3),' (s)'),file=logpath,append=TRUE)            
         }
         
         clog <- Pop$ncells>0 # Get logical array for indices of active (# cells >0) clones
@@ -237,7 +248,7 @@ sompop <- function(N0, mui, tau, NT, sld, slp, spd, spp, gender, inGene, geneLis
         D <- N[ii]*tau*genTime[ii]/N0 # Linear death rate function (cell deaths per time-step per cell)
 #         D <- log(1 + (e-1)*N[ii]/N0)*tau*genTime[ii] # Log death rate function
 
-        nins <- sum(unlist(mcmapply(get_nins,Pop$ncells[clog],Pop$mu_i[clog],SIMPLIFY=FALSE))) # Get number of exonic insertions
+        nins <- sum(unlist(mapply(get_nins,Pop$ncells[clog],Pop$mu_i[clog],SIMPLIFY=FALSE))) # Get number of exonic insertions
         if (nins > 0) {
             
             rownew <- which(Pop$ncells==0)[1] # Find first row of the data table with ncells==0
@@ -281,13 +292,13 @@ sompop <- function(N0, mui, tau, NT, sld, slp, spd, spp, gender, inGene, geneLis
                                                                                         gene_types)]
             
             # Update gene lists
-            tmp1 <- t(mcmapply(update_genes,Pop$genes_new[new_inds],Pop$genes_het[new_inds],Pop$genes_hom[new_inds],SIMPLIFY=TRUE))
+            tmp1 <- t(mapply(update_genes,Pop$genes_new[new_inds],Pop$genes_het[new_inds],Pop$genes_hom[new_inds],SIMPLIFY=TRUE))
             Pop$genes_het[new_inds] <- tmp1[,1]
             Pop$genes_hom[new_inds] <- tmp1[,2]
             Pop$genes_new[new_inds] <- tmp1[,3]
             
             # Update insertion counts
-            tmp2<-t(mcmapply(update_mcount,
+            tmp2<-t(mapply(update_mcount,
                            Pop$nd_het[new_inds],
                            Pop$np_het[new_inds],
                            Pop$nd_hom[new_inds],
@@ -301,11 +312,11 @@ sompop <- function(N0, mui, tau, NT, sld, slp, spd, spp, gender, inGene, geneLis
                      unlist(tmp2[,4]))]
             
             # Update birth and insertion rates
-            Pop[new_inds, B := mcmapply(birthrate, nd_het, np_het, nd_hom, np_hom, sld, slp, spd, spp)]
-            Pop[new_inds, mu_i := mcmapply(get_mu_i, B, mu, tau, genTime[ii])]
+            Pop[new_inds, B := mapply(birthrate, nd_het, np_het, nd_hom, np_hom, sld, slp, spd, spp)]
+            Pop[new_inds, mu_i := mapply(get_mu_i, B, mu, tau, genTime[ii])]
         }
         
-        Pop[Pop$ncells>0, ncells:=mcmapply(delta_ncells, B, D, ncells, tau, genTime[ii])] # Update number of cells for all clones
+        Pop[Pop$ncells>0, ncells:=mapply(delta_ncells, B, D, ncells, tau, genTime[ii])] # Update number of cells for all clones
         Pop <- Pop[order(Pop$ncells,decreasing=TRUE),] # Order data.table by ncells
     }
     print(proc.time() - ptm)

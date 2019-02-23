@@ -1,7 +1,24 @@
 
-
-2018-12-18 12:40:13
+2019-02-22 20:06:25
 9 out of 9 driver genes found in annotation
+Using parallel: FALSE
+Initial size: 1000
+Insertion rate: 1
+Number time steps: 5000
+Gender: male
+Selection coefficients (sD, sP, sd, sp): 0.1, 0.005, 0.01, 5e-04
+Driver gene list file: ../data/gene_lists/drivers_lusc_filt.txt
+Initial mutations: single
+Initial mutated gene: ENSG00000141510 (TP53)
+Initialized...
+25% done | 161.662 (s)
+50% done | 380.139 (s)
+75% done | 585.050 (s)
+100% done | 777.882 (s)
+
+2019-02-22 20:26:55
+9 out of 9 driver genes found in annotation
+Using parallel: FALSE
 Initial size: 1000
 Insertion rate: 1
 Number time steps: 1000
@@ -10,51 +27,3 @@ Selection coefficients (sD, sP, sd, sp): 0.1, 0.005, 0.01, 5e-04
 Driver gene list file: ../data/gene_lists/drivers_lusc_filt.txt
 Initial mutations: none
 Initialized...
-
-
-2018-12-18 12:40:19
-9 out of 9 driver genes found in annotation
-Initial size: 1000
-Insertion rate: 1
-Number time steps: 1000
-Gender: female
-Selection coefficients (sD, sP, sd, sp): 0.1, 0.005, 0.01, 5e-04
-Driver gene list file: ../data/gene_lists/drivers_lusc_filt.txt
-Initial mutations: none
-Initialized...
-25% done | 3.571 (s)
-50% done | 7.108 (s)
-75% done | 10.636 (s)
-100% done | 14.276 (s)
-
-
-2018-12-18 13:07:34
-9 out of 9 driver genes found in annotation
-Initial size: 1000
-Insertion rate: 1
-Number time steps: 1000
-Gender: female
-Selection coefficients (sD, sP, sd, sp): 0.1, 0.005, 0.01, 5e-04
-Driver gene list file: ../data/gene_lists/drivers_lusc_filt.txt
-Initial mutations: single
-Initial mutated gene: ENSG00000141510
-Initial driver: ENSG00000141510   TP53
-Initialized...
-
-
-2018-12-18 13:07:42
-9 out of 9 driver genes found in annotation
-Initial size: 1000
-Insertion rate: 1
-Number time steps: 1000
-Gender: female
-Selection coefficients (sD, sP, sd, sp): 0.1, 0.005, 0.01, 5e-04
-Driver gene list file: ../data/gene_lists/drivers_lusc_filt.txt
-Initial mutations: single
-Initial mutated gene: ENSG00000141510
-Initial driver: ENSG00000141510   TP53
-Initialized...
-25% done | 3.757 (s)
-50% done | 7.358 (s)
-75% done | 11.166 (s)
-100% done | 14.993 (s)

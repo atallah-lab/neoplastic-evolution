@@ -31,7 +31,7 @@ Usage: ./run_v2_5.r [options]
 
 
 Options:
-	-d DRIVERS, --drivers=DRIVERS
+	--drivers=DRIVERS
 		List of driver genes: text file with single column of driver gene ENSEMBL IDs
 		[default = ../data/gene_lists/drivers_lusc_filt.txt (Lung Squamous Cell Carcinoma)]
 
@@ -41,19 +41,19 @@ Options:
 	-n INITIAL_SIZE, --initial_size=INITIAL_SIZE
 		Number of cells in initial population [default = 1000]
 
-	-mu INSERTION_RATE, --insertion_rate=INSERTION_RATE
+	-m INSERTION_RATE, --insertion_rate=INSERTION_RATE
 		Average number of L1 insertions per cell cycle [default = 1]
 
-	-sD DRIVER_STRENGTH_HOM, --driver_strength_hom=DRIVER_STRENGTH_HOM
+	-D DRIVER_STRENGTH_HOM, --driver_strength_hom=DRIVER_STRENGTH_HOM
 		Selection coefficient of homozygous driver mutations [default = 0.1]
 
-	-sP PASSENGER_STRENGTH_HOM, --passenger_strength_hom=PASSENGER_STRENGTH_HOM
+	-P PASSENGER_STRENGTH_HOM, --passenger_strength_hom=PASSENGER_STRENGTH_HOM
 		Selection coefficient of homozygous passenger mutations [default = 0.005]
 
-	-sd DRIVER_STRENGTH_HET, --driver_strength_het=DRIVER_STRENGTH_HET
+	-d DRIVER_STRENGTH_HET, --driver_strength_het=DRIVER_STRENGTH_HET
 		Selection coefficient of heterozygous driver mutations [default = sD/10]
 
-	-sp PASSENGER_STRENGTH_HET, --passenger_strength_het=PASSENGER_STRENGTH_HET
+	-p PASSENGER_STRENGTH_HET, --passenger_strength_het=PASSENGER_STRENGTH_HET
 		Selection coefficient of heterozygous passenger mutations [default = sP/10]
 
 	-t NUMBER_TIMESTEPS, --number_timesteps=NUMBER_TIMESTEPS
@@ -62,21 +62,24 @@ Options:
 		(Note: by default 1 time step = 1 cell generation)
 
 	--tau=TAU
-		Time resolution: number of time steps each generation is divided into [default = 1]
+		Time resolution: number of generations simulated per timestep (can be < 1) [default = 1]
 
 	-l LOG_PATH, --log_path=LOG_PATH
 		Path to log file [default = ./log.txt]
 
+	--parallel=PARALLEL
+		Whether to use parallel processing [default = FALSE]
+
 	--initial_mut=INITIAL_MUT
 		'none' - no mutations in initial population
-		'single' - 1 gene is heterozygously disrupted in 1 cell of the initial population (flag --initial_gene specifies this gene)
+		'single' - 1 gene is homozygously disrupted in a single cell of population (flag --initial_gene specifies this gene)
 		'inherited' - 1 gene is heterozygously disrupted in all cells of initial population (flag --initial_gene specifies this gene)
 		[default = none]
 
 	--initial_gene=INITIAL_GENE
 		Gene disrupted at initialization if using --im 'single' or 'inherited' [default = ENSG00000141510 (TP53 gene)]
 
-	-df DATA_FOLDER, --data_folder=DATA_FOLDER
+	-f DATA_FOLDER, --data_folder=DATA_FOLDER
 		Path to directory storing data files for simulated genome [default = ../data/genomes/hg38/]
 
 	-o OUTPUT_FILE, --output_file=OUTPUT_FILE
