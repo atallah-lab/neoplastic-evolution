@@ -134,7 +134,7 @@ sompop <- function(N0, mui, tau, NT, sld, slp, spd, spp, gender, inGene, geneLis
         mapply = mcmapply
     }
     if (gender=='male') {
-        mu <- mui*pd_exvsnon_m[1] # scale insertion rate by 1-probability of non-exonic insertion
+        mu <- mui*pd_exvsnon_m[1] # scale insertion rate by probability of exonic insertion
         gene_pd <- gene_pd_m
         update_genes <- update_genes_m
         update_mcount <- update_mcount_m
