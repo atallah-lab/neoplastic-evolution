@@ -23,10 +23,10 @@ option_list = list(
                 help="Selection coefficient of homozygous passenger mutations [default = %default]"),
         
         make_option(c("-d", "--driver_strength_het"), type="double", default=NULL,
-                help="Selection coefficient of heterozygous driver mutations [default = sD/10]"),
+                help="Selection coefficient of heterozygous driver mutations [default = DRIVER_STRENGTH_HOM * 0.1]"),
 
         make_option(c("-p", "--passenger_strength_het"), type="double", default=NULL,
-                help="Selection coefficient of heterozygous passenger mutations [default = sP/10]"),
+                help="Selection coefficient of heterozygous passenger mutations [default = PASSENGER_STRENGTH_HOM * 0.1"),
 
         make_option(c("-t", "--number_timesteps"), type="integer", default=1e3,
                 help="Number of time steps to simulate\n\t\t[default = %default]\n\t\t(Note: by default 1 time step = 1 cell generation)"),
@@ -60,8 +60,8 @@ load(paste0(opt$data_folder,'/gene_pd_exon.rda')) # Data objects holding probabi
 source('./src_sompop_v0_2_6.r')
 xy_genes <- gene_pd_m$gene_id[gene_pd_m$chrom %in% c('X','Y')] # Getting list of genes on chroms. X and Y by symbol
 maxNClones <- opt$initial_size*4;
-if (is.null(opt$driver_strength_het)) {opt$driver_strength_het=opt$driver_strength_hom/10}
-if (is.null(opt$passenger_strength_het)) {opt$passenger_strength_het=opt$passenger_strength_hom/10}
+if (is.null(opt$driver_strength_het)) {opt$driver_strength_het=opt$driver_strength_hom * 0.1}
+if (is.null(opt$passenger_strength_het)) {opt$passenger_strength_het=opt$passenger_strength_hom * 0.1}
 
 out <- sompop(
 			opt$initial_size, # Initial population size
