@@ -51,10 +51,10 @@ Options:
 		Selection coefficient of homozygous passenger mutations [default = 0.005]
 
 	-d DRIVER_STRENGTH_HET, --driver_strength_het=DRIVER_STRENGTH_HET
-		Selection coefficient of heterozygous driver mutations [default = sD/10]
+		Selection coefficient of heterozygous driver mutations [default = DRIVER_STRENGTH_HOM * 0.1]
 
 	-p PASSENGER_STRENGTH_HET, --passenger_strength_het=PASSENGER_STRENGTH_HET
-		Selection coefficient of heterozygous passenger mutations [default = sP/10]
+		Selection coefficient of heterozygous passenger mutations [default = PASSENGER_STRENGTH_HOM * 0.1]
 
 	-t NUMBER_TIMESTEPS, --number_timesteps=NUMBER_TIMESTEPS
 		Number of time steps to simulate
