@@ -10,12 +10,12 @@ An R project developed to simulate somatic population dynamics of transposable e
 	- https://stat.ethz.ch/R-manual/R-devel/library/parallel/doc/parallel.pdf
 	- ```install.packages('parallel')```
 
-##### For run_v2_5.r script:
+##### For run_v2_6.r script:
 * optparse
 	+ https://cran.r-project.org/web/packages/optparse/optparse.pdf
 	+ ```install.packages('optparse')```
 	
-##### For run_v2_5.ipynb notebook:
+##### For run_v2_6.ipynb notebook:
 * Jupyter notebook
 	+ http://jupyter.org/install
 * IRKernel
@@ -23,11 +23,11 @@ An R project developed to simulate somatic population dynamics of transposable e
 	
 ## Source Code
 
-#### ./src/run_v2_5.r
-* An R script for running sompop_v0_2_5 simulation.
+#### ./src/run_v2_6.r
+* An R script for running sompop_v0_2_6 simulation.
 		
 ```{r}
-Usage: ./run_v2_5.r [options]
+Usage: ./run_v2_6.r [options]
 
 
 Options:
@@ -89,10 +89,10 @@ Options:
 		Show this help message and exit
 ```
 
-#### ./src/run_v2_5.ipynb
-* Jupyter notebook for running sompop_v0_2_5. Set up to perform single test runs and basic visualization of results, or batch runs.
+#### ./src/run_v2_6.ipynb
+* Jupyter notebook for running sompop_v0_2_6. Set up to perform single test runs and basic visualization of results, or batch runs.
 
-#### ./src/src_sompop_v0_2_5.r
+#### ./src/src_sompop_v0_2_6.r
 * An R file containing function definitions for simulation
 
 ## Data
