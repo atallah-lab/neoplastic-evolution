@@ -1,0 +1,32 @@
+
+2019-05-04 18:51:43
+9 out of 9 driver genes found in annotation
+Using parallel: FALSE
+Initial size: 1000
+Insertion rate: 50
+Number time steps: 100
+Gender: male
+Selection coefficients (sD, sP, sd, sp): 0.1, 0.005, 0.01, 5e-04
+Driver gene list file: ../../data/gene_lists/drivers_lusc_filt.txt
+Initial mutations: none
+Initialized...
+25% done | 4.522 (s)
+50% done | 8.990 (s)
+75% done | 13.541 (s)
+100% done | 18.379 (s)
+
+2019-05-04 18:52:13
+9 out of 9 driver genes found in annotation
+Using parallel: FALSE
+Initial size: 1000
+Insertion rate: 5
+Number time steps: 1000
+Gender: male
+Selection coefficients (sD, sP, sd, sp): 0.1, 0.005, 0.01, 5e-04
+Driver gene list file: ../../data/gene_lists/drivers_lusc_filt.txt
+Initial mutations: none
+Initialized...
+25% done | 6.403 (s)
+50% done | 12.865 (s)
+75% done | 20.658 (s)
+100% done | 30.023 (s)

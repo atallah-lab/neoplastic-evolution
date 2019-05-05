@@ -57,7 +57,7 @@ opt = parse_args(OptionParser(option_list=option_list))
 
 load(paste0(opt$data_folder,'/exonicvsnon_counts.rda')) # Data objects holding probability of exonic vs non-exonic insertion
 load(paste0(opt$data_folder,'/gene_pd_exon.rda')) # Data objects holding probability of insertion in each gene
-source('./src_sompop_v0_2_6.r')
+source('./src_sompop_v0_2_7.r')
 xy_genes <- gene_pd_m$gene_id[gene_pd_m$chrom %in% c('X','Y')] # Getting list of genes on chroms. X and Y by symbol
 maxNClones <- opt$initial_size*4;
 if (is.null(opt$driver_strength_het)) {opt$driver_strength_het=opt$driver_strength_hom * 0.1}
