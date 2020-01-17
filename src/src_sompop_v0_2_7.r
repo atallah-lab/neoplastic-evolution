@@ -229,9 +229,9 @@ sompop <- function(N0, mui, tau, NT, sld, slp, spd, spp, gender, inGene, geneLis
     N <- rep(0,NT) # Allocate array for population size time series
     genTime <- rep(0,NT) # Allocate array for generation time factor
     genes <- character(nrow(gene_pd))
-    e <- exp(1) # define Euler's number
+    #e <- exp(1) # define Euler's number (for log death rate)
     write('Initialized...',file=logpath,append=TRUE)
-
+    
     ptm <- proc.time()
     for (ii in 1:NT) { # Loop over time steps
         if(ii %in% c(round(NT/4),round(NT/4*2),round(NT/4*3),NT)) { # Print progress at 25% completed intervals
@@ -245,6 +245,10 @@ sompop <- function(N0, mui, tau, NT, sld, slp, spd, spp, gender, inGene, geneLis
         genTime[ii] <- 1/(sum(Pop$B[clog]*Pop$ncells[clog])/sum(Pop$ncells[clog])) # Get generation length
         D <- N[ii]*tau*genTime[ii]/N0 # Linear death rate function (cell deaths per time-step per cell)
 #         D <- log(1 + (e-1)*N[ii]/N0)*tau*genTime[ii] # Log death rate function
+        
+        if (ii==NT) {
+            break
+        }
         
         #### Simulate mutations
         nins <- sum(unlist(mapply(get_nins,Pop$ncells[clog],Pop$mu_i[clog],SIMPLIFY=FALSE))) # Get number of exonic insertions

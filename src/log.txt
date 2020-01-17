@@ -2144,3 +2144,302 @@ Initialized...
 50% done | 37.035 (s)
 75% done | 61.969 (s)
 100% done | 95.827 (s)
+
+2019-05-09 07:54:24
+9 out of 9 driver genes found in annotation
+Using parallel: FALSE
+Initial size: 1000
+Insertion rate: 5
+Number time steps: 2000
+Gender: male
+Selection coefficients (sD, sP, sd, sp): 0.5, 0.05, 0.05, 0.005
+Driver gene list file: ../data/gene_lists/drivers_lusc_filt.txt
+Initial mutations: none
+Initialized...
+25% done | 8.151 (s)
+50% done | 15.594 (s)
+75% done | 23.071 (s)
+100% done | 30.660 (s)
+
+2019-05-09 08:03:04
+9 out of 9 driver genes found in annotation
+Using parallel: FALSE
+Initial size: 1000
+Insertion rate: 5
+Number time steps: 2000
+Gender: male
+Selection coefficients (sD, sP, sd, sp): 0.5, 0.05, 0.05, 0.005
+Driver gene list file: ../data/gene_lists/drivers_lusc_filt.txt
+Initial mutations: none
+Initialized...
+25% done | 12.606 (s)
+50% done | 28.091 (s)
+75% done | 45.255 (s)
+100% done | 65.689 (s)
+
+2019-05-09 08:44:00
+9 out of 9 driver genes found in annotation
+Using parallel: FALSE
+Initial size: 1000
+Insertion rate: 5
+Number time steps: 100
+Gender: male
+Selection coefficients (sD, sP, sd, sp): 0.5, 0.05, 0.05, 0.005
+Driver gene list file: ../data/gene_lists/drivers_lusc_filt.txt
+Initial mutations: none
+Initialized...
+
+2019-05-09 08:44:26
+9 out of 9 driver genes found in annotation
+Using parallel: FALSE
+Initial size: 1000
+Insertion rate: 5
+Number time steps: 100
+Gender: male
+Selection coefficients (sD, sP, sd, sp): 0.5, 0.05, 0.05, 0.005
+Driver gene list file: ../data/gene_lists/drivers_lusc_filt.txt
+Initial mutations: none
+Initialized...
+25% done | 0.637 (s)
+50% done | 1.251 (s)
+75% done | 1.879 (s)
+100% done | 2.492 (s)
+
+2019-05-09 08:46:19
+9 out of 9 driver genes found in annotation
+Using parallel: FALSE
+Initial size: 1000
+Insertion rate: 5
+Number time steps: 100
+Gender: male
+Selection coefficients (sD, sP, sd, sp): 0.5, 0.05, 0.05, 0.005
+Driver gene list file: ../data/gene_lists/drivers_lusc_filt.txt
+Initial mutations: none
+Initialized...
+25% done | 0.587 (s)
+50% done | 1.223 (s)
+75% done | 1.846 (s)
+100% done | 2.465 (s)
+
+2019-05-09 08:49:08
+9 out of 9 driver genes found in annotation
+Using parallel: FALSE
+Initial size: 1000
+Insertion rate: 5
+Number time steps: 1
+Gender: male
+Selection coefficients (sD, sP, sd, sp): 0.5, 0.05, 0.05, 0.005
+Driver gene list file: ../data/gene_lists/drivers_lusc_filt.txt
+Initial mutations: none
+Initialized...
+100% done | 0.001 (s)
+
+2019-05-09 08:49:13
+9 out of 9 driver genes found in annotation
+Using parallel: FALSE
+Initial size: 1000
+Insertion rate: 5
+Number time steps: 2
+Gender: male
+Selection coefficients (sD, sP, sd, sp): 0.5, 0.05, 0.05, 0.005
+Driver gene list file: ../data/gene_lists/drivers_lusc_filt.txt
+Initial mutations: none
+Initialized...
+50% done | 0.000 (s)
+100% done | 0.029 (s)
+
+2019-05-09 08:49:21
+9 out of 9 driver genes found in annotation
+Using parallel: FALSE
+Initial size: 1000
+Insertion rate: 5
+Number time steps: 10
+Gender: male
+Selection coefficients (sD, sP, sd, sp): 0.5, 0.05, 0.05, 0.005
+Driver gene list file: ../data/gene_lists/drivers_lusc_filt.txt
+Initial mutations: none
+Initialized...
+20% done | 0.029 (s)
+50% done | 0.137 (s)
+80% done | 0.207 (s)
+100% done | 0.255 (s)
+
+2019-05-09 08:49:36
+9 out of 9 driver genes found in annotation
+Using parallel: FALSE
+Initial size: 1000
+Insertion rate: 5
+Number time steps: 1
+Gender: male
+Selection coefficients (sD, sP, sd, sp): 0.5, 0.05, 0.05, 0.005
+Driver gene list file: ../data/gene_lists/drivers_lusc_filt.txt
+Initial mutations: none
+Initialized...
+100% done | 0.000 (s)
+
+2019-05-09 08:50:11
+9 out of 9 driver genes found in annotation
+Using parallel: FALSE
+Initial size: 1000
+Insertion rate: 5
+Number time steps: 3
+Gender: male
+Selection coefficients (sD, sP, sd, sp): 0.5, 0.05, 0.05, 0.005
+Driver gene list file: ../data/gene_lists/drivers_lusc_filt.txt
+Initial mutations: none
+Initialized...
+33.3333333333333% done | 0.001 (s)
+66.6666666666667% done | 0.030 (s)
+100% done | 0.064 (s)
+
+2019-05-09 08:56:21
+9 out of 9 driver genes found in annotation
+Using parallel: FALSE
+Initial size: 1000
+Insertion rate: 5
+Number time steps: 2000
+Gender: male
+Selection coefficients (sD, sP, sd, sp): 0.5, 0.05, 0.05, 0.005
+Driver gene list file: ../data/gene_lists/drivers_lusc_filt.txt
+Initial mutations: none
+Initialized...
+25% done | 14.542 (s)
+50% done | 30.621 (s)
+75% done | 50.591 (s)
+
+2019-05-09 09:11:22
+9 out of 9 driver genes found in annotation
+Using parallel: FALSE
+Initial size: 1000
+Insertion rate: 5
+Number time steps: 4000
+Gender: male
+Selection coefficients (sD, sP, sd, sp): 0.5, 0.05, 0.05, 0.005
+Driver gene list file: ../data/gene_lists/drivers_lusc_filt.txt
+Initial mutations: none
+Initialized...
+25% done | 21.244 (s)
+
+2019-05-09 09:42:59
+9 out of 9 driver genes found in annotation
+Using parallel: FALSE
+Initial size: 1000
+Insertion rate: 5
+Number time steps: 4000
+Gender: male
+Selection coefficients (sD, sP, sd, sp): 0.5, 0.05, 0.05, 0.005
+Driver gene list file: ../data/gene_lists/drivers_lusc_filt.txt
+Initial mutations: none
+Initialized...
+25% done | 21.716 (s)
+50% done | 48.377 (s)
+75% done | 76.678 (s)
+
+2019-05-09 09:44:33
+9 out of 9 driver genes found in annotation
+Using parallel: FALSE
+Initial size: 1000
+Insertion rate: 5
+Number time steps: 4000
+Gender: male
+Selection coefficients (sD, sP, sd, sp): 0.5, 0.05, 0.05, 0.005
+Driver gene list file: ../data/gene_lists/drivers_lusc_filt.txt
+Initial mutations: none
+Initialized...
+25% done | 20.264 (s)
+50% done | 45.669 (s)
+
+2019-05-09 10:27:08
+9 out of 9 driver genes found in annotation
+Using parallel: FALSE
+Initial size: 1000
+Insertion rate: 5
+Number time steps: 4000
+Gender: male
+Selection coefficients (sD, sP, sd, sp): 0.5, 0.05, 0.05, 0.005
+Driver gene list file: ../data/gene_lists/drivers_lusc_filt.txt
+Initial mutations: none
+Initialized...
+25% done | 22.351 (s)
+50% done | 46.378 (s)
+75% done | 75.134 (s)
+100% done | 105.827 (s)
+
+2019-05-09 10:28:54
+9 out of 9 driver genes found in annotation
+Using parallel: FALSE
+Initial size: 1000
+Insertion rate: 5
+Number time steps: 4000
+Gender: male
+Selection coefficients (sD, sP, sd, sp): 0.5, 0.05, 0.05, 0.005
+Driver gene list file: ../data/gene_lists/drivers_lusc_filt.txt
+Initial mutations: none
+Initialized...
+25% done | 20.058 (s)
+50% done | 41.007 (s)
+75% done | 63.578 (s)
+100% done | 86.183 (s)
+
+2019-05-15 14:25:04
+9 out of 9 driver genes found in annotation
+Using parallel: FALSE
+Initial size: 1000
+Insertion rate: 5
+Number time steps: 5000
+Gender: male
+Selection coefficients (sD, sP, sd, sp): 0.2, 0.05, 0.02, 0.005
+Driver gene list file: ../data/gene_lists/drivers_lusc_filt.txt
+Initial mutations: none
+Initialized...
+25% done | 30.102 (s)
+50% done | 58.063 (s)
+75% done | 85.302 (s)
+100% done | 112.280 (s)
+
+2019-05-20 10:12:16
+9 out of 9 driver genes found in annotation
+Using parallel: FALSE
+Initial size: 1000
+Insertion rate: 5
+Number time steps: 5000
+Gender: male
+Selection coefficients (sD, sP, sd, sp): 0.2, 0.05, 0.02, 0.005
+Driver gene list file: ../data/gene_lists/drivers_lusc_filt.txt
+Initial mutations: inherited
+Initial mutated gene: ENSG00000141510 (TP53)
+Initialized...
+
+2019-05-20 10:12:31
+9 out of 9 driver genes found in annotation
+Using parallel: FALSE
+Initial size: 100
+Insertion rate: 1
+Number time steps: 1000
+Gender: male
+Selection coefficients (sD, sP, sd, sp): 0.1, 0.005, 0.01, 5e-04
+Driver gene list file: ../data/gene_lists/drivers_lusc_filt.txt
+Initial mutations: inherited
+Initial mutated gene: ENSG00000141510 (TP53)
+Initialized...
+25% done | 1.671 (s)
+50% done | 3.376 (s)
+75% done | 5.125 (s)
+100% done | 6.819 (s)
+
+2019-05-20 10:12:50
+9 out of 9 driver genes found in annotation
+Using parallel: FALSE
+Initial size: 100
+Insertion rate: 1
+Number time steps: 1000
+Gender: male
+Selection coefficients (sD, sP, sd, sp): 1, 0.005, 0.1, 5e-04
+Driver gene list file: ../data/gene_lists/drivers_lusc_filt.txt
+Initial mutations: inherited
+Initial mutated gene: ENSG00000141510 (TP53)
+Initialized...
+25% done | 1.857 (s)
+50% done | 3.676 (s)
+75% done | 5.462 (s)
+100% done | 7.233 (s)
