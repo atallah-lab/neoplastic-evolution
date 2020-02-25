@@ -95,6 +95,12 @@ Options:
 #### ./src/src_sompop_v0_2_7.r
 * An R file containing function definitions for simulation
 
+#### ./src/src_sompop_DEV.r
+* Source code for simulation incorporating a source of background mutations
+
+#### ./src/map_genome.ipynb
+* Jupyter notebook for generating L1 target site annotations in the human genome
+
 ## Data
 
 #### ./data/genomes
