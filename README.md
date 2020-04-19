@@ -1,4 +1,3 @@
-# sim-develop
 An R project developed to simulate somatic evolution in cancer, with a focus on the role of L1 elements
 
 ## Dependencies:
