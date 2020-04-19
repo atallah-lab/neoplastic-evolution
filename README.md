@@ -1,5 +1,5 @@
 # sim-develop
-An R project developed to simulate somatic population dynamics of transposable elements.
+An R project developed to simulate cancer evolution, with a focus on the role of L1 elements
 
 ## Dependencies:
 ##### Required:
